@@ -2,7 +2,7 @@
 
 :root {
         /* Official Color Palette - Derived from Logo */
-    --primary-blue: #0E2954;
+        --primary-blue: #0E2954;
         --secondary-blue: #1F6E8C;
         --accent-yellow: #F6BA3B;
         --accent-yellow-hover: #DDA117;
@@ -13,13 +13,13 @@
         --bg-white: #FFFFFF;
         --border-color: #DDE6ED;
 
-    /* Shadows & Effects */
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+        /* Shadows & Effects */
+        --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
         --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05);
         --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
 
-    /* Transitions */
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Transitions */
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         --radius-md: 8px;
         --radius-lg: 15px;
 }
@@ -146,6 +146,12 @@ header {
         border-bottom: 1px solid var(--border-color);
 }
 
+@media (max-width: 900px) {
+        .top-bar {
+                display: none !important;
+        }
+}
+
 .top-bar-content {
         display: flex;
         justify-content: center;
@@ -264,17 +270,17 @@ section {
 
 @media (max-width: 600px) {
         .hero-btns {
-                    flex-direction: column;
-                    align-items: center;
-                    width: 100%;
-                    padding: 0 15px;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+                padding: 0 15px;
         }
 
-    .hero-btns .btn {
+        .hero-btns .btn {
                 width: 100% !important;
                 max-width: 100% !important;
                 margin: 5px 0;
-    }
+        }
 }
 
 .grid-auto {
@@ -443,10 +449,10 @@ select:focus {
 
 @media (max-width: 900px) {
         .loja-layout {
-                    grid-template-columns: 1fr;
+                grid-template-columns: 1fr;
         }
 
-    .sidebar-categorias {
+        .sidebar-categorias {
                 position: fixed;
                 left: -300px;
                 top: 0;
@@ -457,13 +463,13 @@ select:focus {
                 transition: var(--transition);
                 box-shadow: 10px 0 30px rgba(0, 0, 0, 0.1);
                 width: 280px;
-    }
+        }
 
-    .sidebar-categorias.active {
+        .sidebar-categorias.active {
                 left: 0;
-    }
+        }
 
-    .btn-toggle-categorias {
+        .btn-toggle-categorias {
                 display: flex !important;
                 align-items: center;
                 gap: 10px;
@@ -476,7 +482,7 @@ select:focus {
                 cursor: pointer;
                 font-weight: 600;
                 width: fit-content;
-    }
+        }
 }
 
 .btn-toggle-categorias {
@@ -568,9 +574,9 @@ select:focus {
 
 @media (max-width: 900px) {
         .contact-layout {
-                    grid-template-columns: 1fr;
-                    gap: 30px;
-                    padding: 40px 0;
+                grid-template-columns: 1fr;
+                gap: 30px;
+                padding: 40px 0;
         }
 }
 
@@ -621,8 +627,8 @@ select:focus {
 
 @media (max-width: 600px) {
         .form-row {
-                    grid-template-columns: 1fr;
-                    gap: 15px;
+                grid-template-columns: 1fr;
+                gap: 15px;
         }
 }
 
@@ -662,7 +668,7 @@ select:focus {
         scroll-snap-type: x mandatory;
         padding-bottom: 25px;
         /* Space for scrollbar */
-    padding-top: 10px;
+        padding-top: 10px;
 }
 
 .services-slider::-webkit-scrollbar {
@@ -712,16 +718,16 @@ select:focus {
 
 @media (max-width: 768px) {
         .services-slider-item {
-                    flex: 0 0 280px;
-                    max-width: 85vw;
-                    /* Ensure card doesn't exceed screen width */
-            padding: 30px;
+                flex: 0 0 280px;
+                max-width: 85vw;
+                /* Ensure card doesn't exceed screen width */
+                padding: 30px;
         }
 }
 
 @media (max-width: 320px) {
         .services-slider-item {
-                    flex: 0 0 260px;
+                flex: 0 0 260px;
         }
 }
 
@@ -773,16 +779,16 @@ select:focus {
 
 @media (max-width: 900px) {
         .btn-toggle-categorias {
-                    display: block;
-                    /* Show floating button on mobile */
+                display: block;
+                /* Show floating button on mobile */
         }
 
-    .loja-layout {
+        .loja-layout {
                 flex-direction: column;
                 /* Stack product grid normally */
-    }
+        }
 
-    .sidebar-categorias {
+        .sidebar-categorias {
                 position: fixed;
                 top: 0;
                 left: 0;
@@ -792,18 +798,18 @@ select:focus {
                 z-index: 999;
                 transform: translateX(-100%);
                 /* Hidden by default entirely inside off-canvas */
-            padding: 40px 30px;
+                padding: 40px 30px;
                 overflow-y: auto;
                 box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
-    }
+        }
 
-    .sidebar-categorias.active {
+        .sidebar-categorias.active {
                 transform: translateX(0);
                 /* Slide in from left */
-    }
+        }
 
-    .sidebar-backdrop.active {
+        .sidebar-backdrop.active {
                 display: block;
                 opacity: 1;
-    }
+        }
 }
