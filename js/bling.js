@@ -22,24 +22,22 @@ async function loadProducts() {
     try {
         let products = [];
 
-        // 1. Tentar ler do LocalStorage (Produtos Publicados via Dashboard)
-        if (BLING_CONFIG.USE_LOCAL_STORAGE) {
+        // 1. Tentar ler da Nuvem (API /api/products/list) - Fonte de Verdade para o Cliente
+        console.log("Buscando produtos na nuvem...");
+        const cloudResponse = await fetch('/api/products/list');
+        if (cloudResponse.ok) {
+            const cloudData = await cloudResponse.json();
+            products = cloudData.products || [];
+            console.log("Produtos da nuvem carregados:", products.length);
+        }
+
+        // 2. Fallback para LocalStorage (Cache para o Admin ou Modo Offline)
+        if (products.length === 0 && BLING_CONFIG.USE_LOCAL_STORAGE) {
             const storedData = localStorage.getItem('financial_data');
             if (storedData) {
                 const data = JSON.parse(storedData);
-                // Pegar apenas os produtos com status 'published'
                 products = (data.importedProducts || []).filter(p => p.status === 'published');
-                console.log("Produtos publicados carregados do storage local:", products.length);
-            }
-        }
-
-        // 2. Se não houver produtos locais, tentar carregar da API segura
-        if (products.length === 0) {
-            console.log("Buscando produtos via API segura...");
-            const response = await fetch('/api/bling/sync'); // Endpoint seguro que não expõe a chave
-            if (response.ok) {
-                const data = await response.json();
-                products = data.products || [];
+                console.log("Usando produtos do storage local (fallback):", products.length);
             }
         }
 
