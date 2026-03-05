@@ -1,4 +1,4 @@
-const fetch = require('node-fetch'); // Certifique-se de que node-fetch está disponível ou use o global fetch se estiver no Node 18+
+// Utiliza o fetch nativo do Node.js (Vercel Node 18+)
 
 const BLING_API_KEY = process.env.BLING_API_KEY || '92dffb27273336f7e9a8c34b5e57eb01329c776c72d81a693c69c7de42e29c7f098c5e06';
 
