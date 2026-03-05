@@ -8,6 +8,19 @@
     <link rel="stylesheet" href="css/index.css">
     <link rel="icon" type="image/png" href="img/logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .category-item.active {
+            color: var(--primary-blue) !important;
+            font-weight: 700 !important;
+            border-left: 3px solid var(--accent-yellow);
+            padding-left: 8px;
+        }
+
+        .category-item {
+            transition: 0.3s;
+            display: block;
+        }
+    </style>
 </head>
 
 <body>
@@ -20,7 +33,7 @@
                             target="_blank" class="desktop-only" style="margin-right: 15px; font-size: 0.75rem;"><i
                                 class="fas fa-map-marker-alt"></i> Rua Major Pinheiro Franco, 155</a>
                         <a href="tel:1147982040"><i class="fas fa-phone"></i> (11) 4798-2040</a>
-                        <a href="https://wa.me/5511999201062" target="_blank"><img src="img/whatsapp.svg" alt="WhatsApp"> (11)
+                        <a href="https://wa.me/5511999201062" target="_blank"><i class="fab fa-whatsapp"></i> (11)
                             99920-1062</a>
                         <a href="https://instagram.com/artesedecoracoes.ltda" target="_blank"><i
                                 class="fab fa-instagram"></i> @artesedecoracoes.ltda</a>
@@ -190,124 +203,10 @@
 
                     <div id="product-grid"
                         style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 25px;">
-                        <!-- Product Item 1 -->
-                        <div class="product-card" data-name="Piso Laminado Durafloor"
-                            style="background: white; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); transition: var(--transition);">
-                            <div style="height: 200px; background: #eee; position: relative;">
-                                <img src="https://images.unsplash.com/photo-1581850518616-bcb8077fa2aa?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                                    alt="Piso" style="width:100%; height:100%; object-fit:cover;">
-                                <div
-                                    style="position: absolute; top: 10px; right: 10px; background: var(--alert-red); color: white; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 700;">
-                                    PROMO</div>
-                            </div>
-                            <div style="padding: 20px;">
-                                <h4 style="margin-bottom: 10px;">Piso Laminado Durafloor</h4>
-                                <div
-                                    style="color: var(--primary-blue); font-weight: 700; font-size: 1.2rem; margin-bottom: 15px;">
-                                    R$ 89,90 <small
-                                        style="font-weight: 400; font-size: 0.8rem; color: var(--text-muted);">/m²</small>
-                                </div>
-                                <a href="#" class="btn btn-primary" style="width: 100%; font-size: 0.9rem;">Ver
-                                    detalhes</a>
-                            </div>
-                        </div>
-
-                        <!-- Product Item 2 -->
-                        <div class="product-card" data-name="Forro PVC Branco"
-                            style="background: white; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); transition: var(--transition);">
-                            <div style="height: 200px; background: #eee; position: relative;">
-                                <img src="https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                                    alt="Forro" style="width:100%; height:100%; object-fit:cover;">
-                            </div>
-                            <div style="padding: 20px;">
-                                <h4 style="margin-bottom: 10px;">Forro PVC Branco 8mm</h4>
-                                <div
-                                    style="color: var(--primary-blue); font-weight: 700; font-size: 1.2rem; margin-bottom: 15px;">
-                                    R$ 35,00 <small
-                                        style="font-weight: 400; font-size: 0.8rem; color: var(--text-muted);">/m²</small>
-                                </div>
-                                <a href="#" class="btn btn-primary" style="width: 100%; font-size: 0.9rem;">Ver
-                                    detalhes</a>
-                            </div>
-                        </div>
-
-                        <!-- Product Item 3 -->
-                        <div class="product-card" data-name="Chapa Drywall ST"
-                            style="background: white; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); transition: var(--transition);">
-                            <div style="height: 200px; background: #eee; position: relative;">
-                                <img src="https://images.unsplash.com/photo-1504148455328-c376907d081c?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                                    alt="Drywall" style="width:100%; height:100%; object-fit:cover;">
-                            </div>
-                            <div style="padding: 20px;">
-                                <h4 style="margin-bottom: 10px;">Chapa Drywall Standard</h4>
-                                <div
-                                    style="color: var(--primary-blue); font-weight: 700; font-size: 1.2rem; margin-bottom: 15px;">
-                                    R$ 42,00 <small
-                                        style="font-weight: 400; font-size: 0.8rem; color: var(--text-muted);">/unid</small>
-                                </div>
-                                <a href="#" class="btn btn-primary" style="width: 100%; font-size: 0.9rem;">Ver
-                                    detalhes</a>
-                            </div>
-                        </div>
-
-                        <!-- Product Item 4 -->
-                        <div class="product-card" data-name="Piso Vinílico Tarkett"
-                            style="background: white; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); transition: var(--transition);">
-                            <div style="height: 200px; background: #eee; position: relative;">
-                                <img src="https://images.unsplash.com/photo-1513467535987-fd81bc7d62f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                                    alt="Vinílico" style="width:100%; height:100%; object-fit:cover;">
-                            </div>
-                            <div style="padding: 20px;">
-                                <h4 style="margin-bottom: 10px;">Piso Vinílico Tarkett</h4>
-                                <div
-                                    style="color: var(--primary-blue); font-weight: 700; font-size: 1.2rem; margin-bottom: 15px;">
-                                    R$ 115,00 <small
-                                        style="font-weight: 400; font-size: 0.8rem; color: var(--text-muted);">/m²</small>
-                                </div>
-                                <a href="#" class="btn btn-primary" style="width: 100%; font-size: 0.9rem;">Ver
-                                    detalhes</a>
-                            </div>
-                        </div>
-
-                        <!-- Product Item 5 -->
-                        <div class="product-card" data-name="Perfil Drywall Montante"
-                            style="background: white; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); transition: var(--transition);">
-                            <div style="height: 200px; background: #eee; position: relative;">
-                                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                                    alt="Perfil" style="width:100%; height:100%; object-fit:cover;">
-                            </div>
-                            <div style="padding: 20px;">
-                                <h4 style="margin-bottom: 10px;">Perfil Montante 70mm</h4>
-                                <div
-                                    style="color: var(--primary-blue); font-weight: 700; font-size: 1.2rem; margin-bottom: 15px;">
-                                    R$ 28,00 <small
-                                        style="font-weight: 400; font-size: 0.8rem; color: var(--text-muted);">/peça</small>
-                                </div>
-                                <a href="#" class="btn btn-primary" style="width: 100%; font-size: 0.9rem;">Ver
-                                    detalhes</a>
-                            </div>
-                        </div>
-
-                        <!-- Product Item 6 -->
-                        <div class="product-card" data-name="Papel de Parede Vinílico"
-                            style="background: white; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-color); transition: var(--transition);">
-                            <div style="height: 200px; background: #eee; position: relative;">
-                                <img src="https://images.unsplash.com/photo-1615529328331-f8917597711f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-                                    alt="Papel" style="width:100%; height:100%; object-fit:cover;">
-                                <div
-                                    style="position: absolute; top: 10px; right: 10px; background: var(--accent-yellow); color: var(--primary-blue); padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 700;">
-                                    NEW</div>
-                            </div>
-                            <div style="padding: 20px;">
-                                <h4 style="margin-bottom: 10px;">Papel de Parede Europeu</h4>
-                                <div
-                                    style="color: var(--primary-blue); font-weight: 700; font-size: 1.2rem; margin-bottom: 15px;">
-                                    R$ 180,00 <small
-                                        style="font-weight: 400; font-size: 0.8rem; color: var(--text-muted);">/rolo</small>
-                                </div>
-                                <a href="#" class="btn btn-primary" style="width: 100%; font-size: 0.9rem;">Ver
-                                    detalhes</a>
-                            </div>
+                        <!-- Os produtos serão carregados via API do Bling aqui -->
+                        <div id="loading-products" style="grid-column: 1 / -1; text-align: center; padding: 50px;">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: var(--primary-blue);"></i>
+                            <p style="margin-top: 15px; color: var(--text-muted);">Buscando materiais no Bling...</p>
                         </div>
                     </div>
 
@@ -375,8 +274,8 @@
                     </p>
                     <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 12px;">
                         <i class="fas fa-envelope" style="color: var(--accent-yellow);"></i> <a
-                            href="mailto:artesedecoracoes@gmail.com"
-                            style="color: white; text-decoration: none;">artesedecoracoes@gmail.com</a>
+                            href="mailto:artesdecoracoes04@gmail.com"
+                            style="color: white; text-decoration: none;">artesdecoracoes04@gmail.com</a>
                     </p>
                     <p style="font-size: 0.9rem; opacity: 0.7; margin-bottom: 12px;">
                         <i class="fas fa-phone" style="color: var(--accent-yellow);"></i> (11) 4798-2040
@@ -391,7 +290,7 @@
             </div>
             <div
                 style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; text-align: center; font-size: 0.8rem; opacity: 0.5;">
-                <p>&copy; 2024 Artes e Decorações. Todos os direitos reservados.</p>
+                <p>&copy; 2024 Artes e Decorações. Todos os direitos reservados. CNPJ: 55.927.438/0001-01</p>
             </div>
         </div>
     </footer>
@@ -418,6 +317,36 @@
                         sidebarBackdrop.classList.remove("active");
                     });
                 }
+            }
+
+            // Category Filter Logic
+            const categoryItems = document.querySelectorAll(".category-item");
+            if (categoryItems.length > 0) {
+                categoryItems.forEach(item => {
+                    item.addEventListener("click", function (e) {
+                        e.preventDefault();
+
+                        // Remover active de todos
+                        categoryItems.forEach(i => i.classList.remove('active'));
+                        // Adicionar no clicado
+                        this.classList.add('active');
+
+                        // Sincronizar sub-itens se necessário
+                        const id = this.dataset.categoryId;
+                        console.log("Filtrando por categoria:", id);
+
+                        // Chamar o recarregamento dos produtos (definido no bling.js)
+                        if (typeof loadProducts === 'function') {
+                            loadProducts();
+                        }
+
+                        // Fechar menu mobile se estiver aberto
+                        if (sidebarCat) {
+                            sidebarCat.classList.remove("active");
+                            if (sidebarBackdrop) sidebarBackdrop.classList.remove("active");
+                        }
+                    });
+                });
             }
 
             // Product Search Logic
@@ -458,6 +387,9 @@
             }
         });
     </script>
+
+    <script src="js/main.js"></script>
+    <script src="js/bling.js"></script>
 </body>
 
 </html>
