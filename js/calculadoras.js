@@ -126,7 +126,21 @@ function calcularPiso() {
     document.getElementById("results-piso").classList.add("show");
 }
 
-// FORRO PVC
+// FORRO
+function toggleForroOptions() {
+    const tipoForro = document.querySelector('input[name="pvc-tipo-forro"]:checked').value;
+    const opcoesRegua = document.getElementById("pvc-opcoes-regua");
+    const opcoesModular = document.getElementById("pvc-opcoes-modular");
+
+    if (tipoForro === "regua") {
+        opcoesRegua.style.display = "grid";
+        opcoesModular.style.display = "none";
+    } else {
+        opcoesRegua.style.display = "none";
+        opcoesModular.style.display = "grid";
+    }
+}
+
 function togglePVCInputs() {
     const tipo = document.querySelector('input[name="pvc-tipo-medida"]:checked').value;
     const containerMedidas = document.getElementById("pvc-medidas-container");
@@ -151,11 +165,13 @@ function togglePVCInputs() {
 }
 
 function calcularPVC() {
-    const tipo = document.querySelector('input[name="pvc-tipo-medida"]:checked').value;
+    const tipoAfericao = document.querySelector('input[name="pvc-tipo-medida"]:checked').value;
+    const tipoForro = document.querySelector('input[name="pvc-tipo-forro"]:checked').value;
+
     let areaTotal = 0;
     let rodaforroLinear = 0;
 
-    if (tipo === "lxc") {
+    if (tipoAfericao === "lxc") {
         const largura = parseFloat(document.getElementById("pvc-largura").value);
         const comprimento = parseFloat(document.getElementById("pvc-comprimento").value);
         if (!largura || !comprimento) return;
@@ -173,11 +189,38 @@ function calcularPVC() {
     const perda = areaTotal * 0.10;
     const areaComPerda = areaTotal + perda;
 
-    const quantReguas = Math.ceil(areaComPerda / 1.2); // 1.2m^2
+    let quantidade = 0;
+    let labelQtd = "";
+    let unidadeQtd = "";
+    let notaAdicional = "";
+
+    if (tipoForro === "regua") {
+        const rendimentoRegua = parseFloat(document.getElementById("pvc-regua-tamanho").value) || 1.2;
+        quantidade = Math.ceil(areaComPerda / rendimentoRegua);
+
+        let tamanhoTexto = "6m";
+        if (rendimentoRegua === 1.0) tamanhoTexto = "5m";
+        else if (rendimentoRegua === 1.4) tamanhoTexto = "7m";
+        else if (rendimentoRegua === 1.6) tamanhoTexto = "8m";
+
+        labelQtd = `Réguas (${tamanhoTexto})`;
+        unidadeQtd = "pçs";
+        notaAdicional = `Calculado com base em réguas de ${tamanhoTexto} x 20cm.`;
+    } else {
+        const rendimentoPlaca = parseFloat(document.getElementById("pvc-modular-rendimento").value) || 0.39;
+        quantidade = Math.ceil(areaComPerda / rendimentoPlaca);
+        labelQtd = "Placas Modulares";
+        unidadeQtd = "placas";
+        notaAdicional = `Calculado com base no rendimento de ${rendimentoPlaca}m² por placa/caixa.`;
+    }
 
     document.getElementById("res-pvc-area").innerText = formatNum(areaComPerda) + " m²";
-    document.getElementById("res-pvc-reguas").innerText = quantReguas + " pçs";
-    document.getElementById("res-pvc-rodaforro").innerText = formatNum(rodaforroLinear) + " m" + (tipo === 'area' ? '*' : '');
+
+    document.getElementById("label-pvc-qtd").innerText = labelQtd;
+    document.getElementById("res-pvc-reguas").innerText = quantidade + " " + unidadeQtd;
+
+    document.getElementById("res-pvc-rodaforro").innerText = formatNum(rodaforroLinear) + " m lin." + (tipoAfericao === 'area' ? '*' : '');
+    document.getElementById("pvc-result-note").innerText = `* Cálculo considera 10% de perda para recortes. Rodaforro (ou cantoneira) estimado pelo perímetro bruto. ${notaAdicional}`;
 
     document.getElementById("results-pvc").classList.add("show");
 }

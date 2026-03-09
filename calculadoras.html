@@ -219,13 +219,27 @@
                         </div>
                     </div>
 
-                    <!-- FORRO PVC TAB -->
+                    <!-- FORRO TAB -->
                     <div id="tab-pvc" class="calc-content">
                         <div class="calc-header">
-                            <h2 class="premium-font">Calcular Forro PVC</h2>
-                            <p>Informe as medidas do teto (em metros).</p>
+                            <h2 class="premium-font">Calcular Forro</h2>
+                            <p>Selecione o tipo de forro e informe as medidas do teto.</p>
                         </div>
                         <form id="form-pvc">
+                            <div class="calc-form-row" style="margin-bottom: 20px;">
+                                <div class="calc-group" style="flex-direction: row; gap: 20px;">
+                                    <label
+                                        style="display: flex; align-items: center; gap: 8px; font-weight: 500; cursor: pointer;">
+                                        <input type="radio" name="pvc-tipo-forro" value="regua" checked
+                                            onchange="toggleForroOptions()"> Forro PVC Régua
+                                    </label>
+                                    <label
+                                        style="display: flex; align-items: center; gap: 8px; font-weight: 500; cursor: pointer;">
+                                        <input type="radio" name="pvc-tipo-forro" value="modular"
+                                            onchange="toggleForroOptions()"> Forro Modular / Isopor
+                                    </label>
+                                </div>
+                            </div>
                             <div class="calc-form-row" style="margin-bottom: 20px;">
                                 <div class="calc-group" style="flex-direction: row; gap: 20px;">
                                     <label
@@ -268,6 +282,37 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="calc-form-row" id="pvc-opcoes-regua">
+                                <div class="calc-group">
+                                    <label>Tamanho da Régua (Largura padrão 20cm)</label>
+                                    <select id="pvc-regua-tamanho"
+                                        style="padding: 15px; border: 2px solid var(--border-color); border-radius: var(--radius-md); font-size: 1rem; width: 100%;">
+                                        <option value="1.0">5 metros (1.00 m²)</option>
+                                        <option value="1.2" selected>6 metros (1.20 m²)</option>
+                                        <option value="1.4">7 metros (1.40 m²)</option>
+                                        <option value="1.6">8 metros (1.60 m²)</option>
+                                    </select>
+                                </div>
+                                <div class="calc-group">
+                                    <!-- Espaço opcional ao lado -->
+                                </div>
+                            </div>
+
+                            <div class="calc-form-row" id="pvc-opcoes-modular" style="display: none;">
+                                <div class="calc-group">
+                                    <label>Rendimento por Placa/Caixa (m²)</label>
+                                    <div class="calc-input-wrap">
+                                        <input type="number" id="pvc-modular-rendimento" step="0.01" min="0.01"
+                                            value="0.39" placeholder="Ex: 0.39 (para placa 0.625x0.625)">
+                                        <span class="unit">m²</span>
+                                    </div>
+                                </div>
+                                <div class="calc-group">
+                                    <!-- Espaço opcional ao lado -->
+                                </div>
+                            </div>
+
                             <button type="submit" class="btn btn-primary calc-btn">Calcular Quantidade</button>
                         </form>
 
@@ -279,17 +324,16 @@
                                     <div class="result-value" id="res-pvc-area">0 m²</div>
                                 </div>
                                 <div class="result-item highlight">
-                                    <div class="result-label">Réguas (6m x 20cm)</div>
+                                    <div class="result-label" id="label-pvc-qtd">Quantidade de Peças</div>
                                     <div class="result-value" id="res-pvc-reguas">0 pçs</div>
                                 </div>
-                                <div class="result-item">
+                                <div class="result-item" id="box-pvc-rodaforro">
                                     <div class="result-label">Rodaforro</div>
-                                    <div class="result-value" id="res-pvc-rodaforro">0 m</div>
+                                    <div class="result-value" id="res-pvc-rodaforro">0 m lin.</div>
                                 </div>
                             </div>
-                            <p class="result-note">* Calculado com base em réguas padrão de 6m por 20cm (1.2m²). O
-                                cálculo considera estrutura básica de sustentação (Teto). Arame, estruturas e parafusos
-                                são orçados avulsos.</p>
+                            <p class="result-note" id="pvc-result-note">* Cálculo considera 10% de perda para recortes.
+                                Rodaforro estimado pelo perímetro bruto.</p>
                             <div style="text-align: center; margin-top: 25px;">
                                 <a href="https://wa.me/5511999201062?text=Olá,%20fiz%20um%20cálculo%20no%20site%20e%20gostaria%20de%20cotar%20Forro%20PVC."
                                     target="_blank" class="btn btn-accent" style="padding: 10px 20px;"><i
