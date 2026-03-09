@@ -98,6 +98,13 @@ function calcularPiso() {
     const areaComPerda = areaTotal + perda;
     const caixas = Math.ceil(areaComPerda / rendimentoCaixa);
 
+    // Door deduction for baseboard
+    const portasQtd = parseInt(document.getElementById("piso-portas-qtd").value) || 0;
+    const portasLargura = parseFloat(document.getElementById("piso-portas-largura").value) || 0;
+    const descontoLinear = portasQtd * portasLargura;
+
+    rodapeLinear = Math.max(0, rodapeLinear - descontoLinear);
+
     // Manta calculation: area with loss / roll width (1.20m)
     const mantaLinear = areaComPerda / 1.20;
 
