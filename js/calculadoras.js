@@ -207,7 +207,7 @@ function calcularPVC() {
         unidadeQtd = "pçs";
         notaAdicional = `Calculado com base em réguas de ${tamanhoTexto} x 20cm.`;
     } else {
-        const rendimentoPlaca = parseFloat(document.getElementById("pvc-modular-rendimento").value) || 0.39;
+        const rendimentoPlaca = parseFloat(document.getElementById("pvc-modular-rendimento").value) || 0.77;
         quantidade = Math.ceil(areaComPerda / rendimentoPlaca);
         labelQtd = "Placas Modulares";
         unidadeQtd = "placas";
