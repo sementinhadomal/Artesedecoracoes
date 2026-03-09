@@ -108,6 +108,7 @@ function calcularPiso() {
     // Manta calculation: area with loss / roll width (1.20m)
     const mantaLinear = areaComPerda / 1.20;
 
+    document.getElementById("res-piso-area-pura").innerText = formatNum(areaTotal) + " m²";
     document.getElementById("res-piso-area").innerText = formatNum(areaComPerda) + " m²";
     document.getElementById("res-piso-caixas").innerText = caixas + " Cx";
     document.getElementById("res-piso-rodape").innerText = formatNum(rodapeLinear) + " m" + (tipo === 'area' ? '*' : '');
