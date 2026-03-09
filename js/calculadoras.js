@@ -108,12 +108,20 @@ function calcularPiso() {
     // Manta calculation: area with loss / roll width (1.20m)
     const mantaLinear = areaComPerda / 1.20;
 
+    // Insumos do rodapé
+    const pregos = Math.ceil(rodapeLinear / 0.50);
+    const colaBranca = Math.ceil(rodapeLinear / 8.4);
+    const silicone = Math.ceil(rodapeLinear / 10.5);
+
     document.getElementById("res-piso-area-pura").innerText = formatNum(areaTotal) + " m²";
     document.getElementById("res-piso-area").innerText = formatNum(areaComPerda) + " m²";
     document.getElementById("res-piso-caixas").innerText = caixas + " Cx";
+    document.getElementById("res-piso-manta").innerText = formatNum(mantaLinear) + " m lin.";
     document.getElementById("res-piso-rodape").innerText = formatNum(rodapeLinear) + " m" + (tipo === 'area' ? '*' : '');
     document.getElementById("res-piso-portas").innerText = formatNum(descontoLinear) + " m lin.";
-    document.getElementById("res-piso-manta").innerText = formatNum(mantaLinear) + " m lin.";
+    document.getElementById("res-piso-pregos").innerText = pregos + " un";
+    document.getElementById("res-piso-cola").innerText = colaBranca + " kg";
+    document.getElementById("res-piso-silicone").innerText = silicone + " tubos";
 
     document.getElementById("results-piso").classList.add("show");
 }
