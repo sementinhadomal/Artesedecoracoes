@@ -216,7 +216,7 @@ function calcularPVC() {
         quantidade = Math.ceil(areaComPerda / rendimentoPlaca);
         document.getElementById("box-pvc-metalon").style.display = "none";
 
-        labelQtd = "Placas Modulares";
+        labelQtd = "Placas Modulares (Isopor/Fibra)";
         unidadeQtd = "placas";
         notaAdicional = `Calculado com base no rendimento de ${rendimentoPlaca}m² por placa/caixa. Estrutura não incluída.`;
     }
