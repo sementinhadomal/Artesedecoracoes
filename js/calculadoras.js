@@ -260,39 +260,39 @@ function toggleDrywallInputs() {
 function calcularDrywall() {
     const tipo = document.querySelector('input[name="drywall-tipo-medida"]:checked').value;
     let areaTotal = 0;
-    let largura = 0;
-    let altura = 0;
 
     if (tipo === "lxc") {
-        largura = parseFloat(document.getElementById("drywall-largura").value);
-        altura = parseFloat(document.getElementById("drywall-altura").value);
+        const largura = parseFloat(document.getElementById("drywall-largura").value);
+        const altura = parseFloat(document.getElementById("drywall-altura").value);
         if (!largura || !altura) return;
-
         areaTotal = largura * altura;
     } else {
         const areaDigitada = parseFloat(document.getElementById("drywall-area-total").value);
         if (!areaDigitada) return;
-
         areaTotal = areaDigitada;
-        largura = Math.sqrt(areaTotal);
-        altura = Math.sqrt(areaTotal);
     }
 
-    const perda = areaTotal * 0.10;
-    const areaComPerda = areaTotal + perda;
+    // Coeficientes Gypsum por m² de Parede SAD (Simples)
+    const chapasM2 = areaTotal * 2.10; // Inclui as 2 faces + perdas
+    const guiaM = areaTotal * 0.70;
+    const montanteM = areaTotal * 2.30;
+    const paraTA = areaTotal * 25;
+    const paraLA = areaTotal * 2;
+    const massaKg = areaTotal * 0.70;
+    const fitaM = areaTotal * 3;
 
-    // Standard ST plate: 1.2 x 1.8m = 2.16m^2 per face
-    // For a single wall facing both sides, multiply by 2 (usually done, but let's assume single generic partition: 2 faces)
-    const areaTotalDupla = areaComPerda * 2;
-    const chapas = Math.ceil(areaTotalDupla / 2.16);
+    // Conversão para unidades comerciais (Barras de 3m)
+    const guiasUn = Math.ceil(guiaM / 3);
+    const montantesUn = Math.ceil(montanteM / 3);
 
-    // Rough framing estimate
-    const guias = Math.ceil((largura * 2) / 3); // Top and bottom, 3m bars
-    const montantes = Math.ceil((largura / 0.6) * (altura / 3) * 1.1); // ~60cm distance
-
-    document.getElementById("res-drywall-area").innerText = formatNum(areaComPerda) + " m²";
-    document.getElementById("res-drywall-chapas").innerText = chapas + " un";
-    document.getElementById("res-drywall-estrutura").innerText = (guias + montantes) + " pçs" + (tipo === 'area' ? '*' : '');
+    document.getElementById("res-drywall-area").innerText = formatNum(areaTotal) + " m²";
+    document.getElementById("res-drywall-chapas").innerText = formatNum(chapasM2) + " m²";
+    document.getElementById("res-drywall-guia").innerText = guiasUn + " un";
+    document.getElementById("res-drywall-montante").innerText = montantesUn + " un";
+    document.getElementById("res-drywall-par-ta").innerText = Math.ceil(paraTA) + " un";
+    document.getElementById("res-drywall-par-la").innerText = Math.ceil(paraLA) + " un";
+    document.getElementById("res-drywall-massa").innerText = formatNum(massaKg) + " kg";
+    document.getElementById("res-drywall-fita").innerText = formatNum(fitaM) + " m";
 
     document.getElementById("results-drywall").classList.add("show");
 }
