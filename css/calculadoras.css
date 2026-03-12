@@ -258,9 +258,9 @@
 }
 
 .system-card.active {
-    border-color: #00a859; /* Green from user request */
-    background: #f0fff4;
-    box-shadow: 0 0 0 3px rgba(0, 168, 89, 0.1);
+    border-color: var(--primary-blue);
+    background: #f0f7ff; /* Light blue instead of light green */
+    box-shadow: 0 0 0 3px rgba(14, 41, 84, 0.1);
 }
 
 .system-card i {
@@ -270,7 +270,7 @@
 }
 
 .system-card.active i {
-    color: #00a859;
+    color: var(--primary-blue);
 }
 
 .system-card span {
@@ -282,7 +282,7 @@
 }
 
 .system-card.active span {
-    color: #00a859;
+    color: var(--primary-blue);
 }
 
 /* Segmented Control (Measure Type) */
@@ -308,7 +308,7 @@
 
 .segment-item.active {
     background: white;
-    color: #00a859;
+    color: var(--primary-blue);
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
