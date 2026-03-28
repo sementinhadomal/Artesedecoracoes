@@ -1046,6 +1046,11 @@ select:focus {
         flex-wrap: wrap;
 }
 
+/* The duplicate buttons below the video are hidden on desktop */
+.showroom-actions-mobile {
+        display: none;
+}
+
 .btn-primary-outline {
         background: transparent;
         border: 2px solid var(--primary-blue);
@@ -1136,5 +1141,16 @@ select:focus {
 
         .showroom-actions .btn {
                 width: 100%;
+        }
+
+        /* On mobile: hide the original buttons (above video), show the ones below video */
+        .showroom-content > .showroom-actions {
+                display: none;
+        }
+
+        .showroom-actions-mobile {
+                display: flex;
+                margin-top: 16px;
+                justify-content: center;
         }
 }
