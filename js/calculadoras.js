@@ -5,11 +5,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     tabs.forEach(tab => {
         tab.addEventListener("click", () => {
-            // Remove active classes
             tabs.forEach(t => t.classList.remove("active"));
             contents.forEach(c => c.classList.remove("active"));
-
-            // Add active class to clicked tab and target content
             tab.classList.add("active");
             document.getElementById(tab.dataset.target).classList.add("active");
         });
@@ -18,36 +15,48 @@ document.addEventListener("DOMContentLoaded", function () {
     // Form submission handlers
     document.getElementById("form-piso").addEventListener("submit", function (e) {
         e.preventDefault();
-        calcularPiso()
+        calcularPiso();
     });
 
     document.getElementById("form-pvc").addEventListener("submit", function (e) {
         e.preventDefault();
-        calcularPVC()
+        calcularPVC();
     });
 
     document.getElementById("form-drywall").addEventListener("submit", function (e) {
         e.preventDefault();
-        calcularDrywall()
+        calcularDrywall();
     });
 
     document.getElementById("form-papel").addEventListener("submit", function (e) {
         e.preventDefault();
-        calcularPapel()
+        calcularPapel();
     });
 
     document.getElementById("form-persiana").addEventListener("submit", function (e) {
         e.preventDefault();
-        calcularPersiana()
+        calcularPersiana();
     });
+
+    // Assign IDs to all WhatsApp buttons so we can update them dynamically
+    const wppLinks = document.querySelectorAll("[id^='btn-wpp-']");
+    wppLinks.forEach(link => link.setAttribute("target", "_blank"));
 });
+
+// ===== HELPER: Atualiza o link do WhatsApp com a mensagem personalizada =====
+function setWppBtn(id, message) {
+    const btn = document.getElementById(id);
+    if (btn) {
+        btn.href = "https://wa.me/5511999201062?text=" + encodeURIComponent(message);
+    }
+}
 
 // Helper to format numbers safely
 function formatNum(num) {
     return Number.isInteger(num) ? num : num.toFixed(2);
 }
 
-// LAMINADO / VINÍLICO
+// ===== PISO LAMINADO / VINÍLICO =====
 function setPisoMeasureType(type, element) {
     const parent = element.parentElement;
     parent.querySelectorAll('.segment-item').forEach(item => item.classList.remove('active'));
@@ -98,7 +107,6 @@ function calcularPiso() {
         if (!areaDigitada) return;
 
         areaTotal = areaDigitada;
-        // Estimate perimeter for a square room: sqrt(area) * 4
         rodapeLinear = Math.sqrt(areaTotal) * 4;
     }
 
@@ -106,17 +114,13 @@ function calcularPiso() {
     const areaComPerda = areaTotal + perda;
     const caixas = Math.ceil(areaComPerda / rendimentoCaixa);
 
-    // Door deduction for baseboard
     const portasQtd = parseInt(document.getElementById("piso-portas-qtd").value) || 0;
     const portasLargura = parseFloat(document.getElementById("piso-portas-largura").value) || 0;
     const descontoLinear = portasQtd * portasLargura;
 
     rodapeLinear = Math.max(0, rodapeLinear - descontoLinear);
 
-    // Manta calculation: area with loss / roll width (1.20m)
     const mantaLinear = areaComPerda / 1.20;
-
-    // Insumos do rodapé
     const pregos = Math.ceil(rodapeLinear / 0.50);
     const colaBranca = Math.ceil(rodapeLinear / 8.4);
     const silicone = Math.ceil(rodapeLinear / 10.5);
@@ -132,7 +136,22 @@ function calcularPiso() {
     document.getElementById("res-piso-silicone").innerText = silicone + " tubos";
 
     document.getElementById("results-piso").classList.add("show");
-}// FORRO
+
+    // Mensagem personalizada para o WhatsApp
+    const msg = `Olá! Fiz o cálculo de *Piso Laminado/Vinílico* no site de vocês e gostaria de um orçamento:
+
+📐 Área total: ${formatNum(areaTotal)} m²
+📦 Área com perda (10%): ${formatNum(areaComPerda)} m²
+🗃️ Caixas de piso necessárias: *${caixas} cx* (rendimento ${rendimentoCaixa} m²/cx)
+🪵 Manta acrílica: ${formatNum(mantaLinear)} m lin.
+📏 Rodapé: ${formatNum(rodapeLinear)} m lin.
+🔩 Pregos: ${pregos} un | Cola branca: ${colaBranca} kg | Silicone: ${silicone} tubos
+
+Aguardo o orçamento, obrigado!`;
+    setWppBtn("btn-wpp-piso", msg);
+}
+
+// ===== FORRO =====
 function setForroType(type, element) {
     const parent = element.parentElement;
     parent.querySelectorAll('.system-card, .segment-item').forEach(item => item.classList.remove('active'));
@@ -174,7 +193,7 @@ function updateModularRendimento() {
         inputRendimento.readOnly = true;
         labelRendimento.innerText = "Rendimento Placa (1.25x0.625)";
     } else if (tipo === "fibra") {
-        inputRendimento.value = "0.744"; // 1.22 x 0.61
+        inputRendimento.value = "0.744";
         inputRendimento.readOnly = true;
         labelRendimento.innerText = "Rendimento Placa (1.22x0.61)";
     } else if (tipo === "pvc") {
@@ -239,6 +258,8 @@ function calcularPVC() {
     let labelQtd = "";
     let unidadeQtd = "";
     let notaAdicional = "";
+    let tipoNome = "";
+    let metalonBarras = 0;
 
     if (tipoForro === "regua") {
         const rendimentoRegua = parseFloat(document.getElementById("pvc-regua-tamanho").value) || 1.2;
@@ -250,12 +271,13 @@ function calcularPVC() {
         else if (rendimentoRegua === 1.6) tamanhoTexto = "8m";
 
         const metalonLinear = areaComPerda / 0.60;
-        const metalonBarras = Math.ceil(metalonLinear / 6);
+        metalonBarras = Math.ceil(metalonLinear / 6);
         document.getElementById("res-pvc-metalon").innerText = metalonBarras + " un";
         document.getElementById("box-pvc-metalon").style.display = "";
 
         labelQtd = `Réguas (${tamanhoTexto})`;
         unidadeQtd = "pçs";
+        tipoNome = `Forro PVC Régua ${tamanhoTexto}`;
         notaAdicional = `Calculado com base em réguas de ${tamanhoTexto} x 20cm. Estrutura: 1 barra metalon a cada 60cm.`;
     } else {
         const rendimentoPlaca = parseFloat(document.getElementById("pvc-modular-rendimento").value) || 0.781;
@@ -270,11 +292,11 @@ function calcularPVC() {
 
         labelQtd = nomePlaca;
         unidadeQtd = "unidades";
+        tipoNome = `Forro Modular - ${nomePlaca}`;
         notaAdicional = `Calculado com base no rendimento de ${rendimentoPlaca}m² por placa. Estrutura não incluída.`;
     }
 
     document.getElementById("res-pvc-area").innerText = formatNum(areaComPerda) + " m²";
-
     document.getElementById("label-pvc-qtd").innerText = labelQtd;
     document.getElementById("res-pvc-reguas").innerText = quantidade + " " + unidadeQtd;
 
@@ -283,38 +305,43 @@ function calcularPVC() {
     document.getElementById("pvc-result-note").innerText = `* Cálculo considera 10% de perda para recortes. Rodaforro (ou cantoneira) estimado pelo perímetro bruto. ${notaAdicional}`;
 
     document.getElementById("results-pvc").classList.add("show");
+
+    // Mensagem personalizada para o WhatsApp
+    const metalonInfo = tipoForro === "regua" ? `\n🔩 Metalon (barras 6m): ${metalonBarras} un` : "";
+    const msg = `Olá! Fiz o cálculo de *${tipoNome}* no site de vocês e gostaria de um orçamento:
+
+📐 Área com perda (10%): ${formatNum(areaComPerda)} m²
+🪟 ${labelQtd}: *${quantidade} ${unidadeQtd}*
+📏 Rodaforro (barras 6m): ${rodaforroBarras} un${metalonInfo}
+
+Aguardo o orçamento, obrigado!`;
+    setWppBtn("btn-wpp-pvc", msg);
 }
 
-// DRYWALL PAREDE
+// ===== DRYWALL =====
 function selectDrywallSystem(sistema, element) {
-    // Atualizar UI dos cards (escopado ao grid pai)
     const parent = element.parentElement;
     parent.querySelectorAll('.system-card').forEach(card => card.classList.remove('active'));
     element.classList.add('active');
 
-    // Atualizar select oculto e disparar toggle
     const select = document.getElementById("drywall-sistema");
     select.value = sistema;
     toggleDrywallInputs();
 }
 
 function setDrywallMeasureType(type, element) {
-    // Atualizar UI do seletor segmentado
     const parent = element.parentElement;
     parent.querySelectorAll('.segment-item').forEach(item => item.classList.remove('active'));
     element.classList.add('active');
 
-    // Atualizar valor oculto
     document.getElementById("drywall-tipo-medida-val").value = type;
-    
-    // Disparar lógica de toggle
     toggleDrywallInputs();
 }
 
 function toggleDrywallInputs() {
     const sistema = document.getElementById("drywall-sistema").value;
     const tipoMedida = document.getElementById("drywall-tipo-medida-val").value;
-    
+
     const containerMedidas = document.getElementById("drywall-medidas-container");
     const containerArea = document.getElementById("drywall-area-container");
     const labelLXC = document.getElementById("label-drywall-lxc");
@@ -322,7 +349,6 @@ function toggleDrywallInputs() {
     const inputAltura = document.getElementById("drywall-altura");
     const inputAreaTotal = document.getElementById("drywall-area-total");
 
-    // Forros só usam Área
     if (sistema.startsWith("forro")) {
         document.getElementById("drywall-medida-toggle-row").style.display = "none";
         containerMedidas.style.display = "none";
@@ -338,7 +364,7 @@ function toggleDrywallInputs() {
             inputLargura.required = true;
             inputAltura.required = true;
             inputAreaTotal.required = false;
-            labelLXC.innerText = (sistema.startsWith("revest")) ? "Largura x Altura" : "Largura x Altura";
+            if (labelLXC) labelLXC.innerText = "Largura x Altura";
         } else {
             containerMedidas.style.display = "none";
             containerArea.style.display = "grid";
@@ -352,7 +378,7 @@ function toggleDrywallInputs() {
 function calcularDrywall() {
     const sistema = document.getElementById("drywall-sistema").value;
     const tipoAfericao = sistema.startsWith("forro") ? "area" : document.getElementById("drywall-tipo-medida-val").value;
-    
+
     let areaTotal = 0;
     let linearMetragem = 0;
     let alturaParede = 0;
@@ -365,8 +391,7 @@ function calcularDrywall() {
     } else {
         areaTotal = parseFloat(document.getElementById("drywall-area-total").value);
         if (!areaTotal) return;
-        // Para estimativa de perfis quando só tem área:
-        linearMetragem = Math.sqrt(areaTotal); 
+        linearMetragem = Math.sqrt(areaTotal);
         alturaParede = Math.sqrt(areaTotal);
     }
 
@@ -376,16 +401,16 @@ function calcularDrywall() {
     const labelChapas = document.getElementById("label-drywall-chapas");
     const resultNote = document.getElementById("drywall-result-note");
 
-    // Limpar itens anteriores (manter Área e Chapas que são fixos no HTML)
     while (grid.children.length > 2) {
         grid.removeChild(grid.lastChild);
     }
 
     let materials = [];
     let note = "";
+    let sistemaNome = "";
+    let chapasInfo = "";
 
     if (sistema === "parede") {
-        // SAD - Parede Simples (2 faces)
         materials = [
             { label: "Guia 70mm (3m)", val: Math.ceil(areaTotal * 0.70 / 3), unit: "un" },
             { label: "Montante 70mm (3m)", val: Math.ceil(areaTotal * 2.30 / 3), unit: "un" },
@@ -396,11 +421,12 @@ function calcularDrywall() {
         ];
         resArea.innerText = formatNum(areaTotal) + " m²";
         labelChapas.innerText = "Chapas ST 12.5mm (2 faces)";
-        resChapas.innerText = formatNum(areaTotal * 2.10) + " m²";
+        chapasInfo = formatNum(areaTotal * 2.10) + " m²";
+        resChapas.innerText = chapasInfo;
         note = "* Sistema Gypsum SAD (Simples Alvenaria Drywall). Coeficientes oficiais por m² de parede.";
-    } 
+        sistemaNome = "Parede Drywall (SAD)";
+    }
     else if (sistema === "forro-fga") {
-        // FGA - Aramado
         materials = [
             { label: "FGA Cola", val: (areaTotal * 1.25).toFixed(1), unit: "kg" },
             { label: "Junção H (FGA)", val: Math.ceil(areaTotal * 1.5), unit: "un" },
@@ -410,11 +436,12 @@ function calcularDrywall() {
         ];
         resArea.innerText = formatNum(areaTotal) + " m²";
         labelChapas.innerText = "Chapas ST FGA";
-        resChapas.innerText = formatNum(areaTotal * 1.05) + " m²";
+        chapasInfo = formatNum(areaTotal * 1.05) + " m²";
+        resChapas.innerText = chapasInfo;
         note = "* Sistema Gypsum FGA (Forro Gesso Aramado). Ideal para vãos pequenos e acabamento liso.";
+        sistemaNome = "Forro Drywall FGA (Aramado)";
     }
     else if (sistema === "forro-fge") {
-        // FGE - Estruturado
         materials = [
             { label: "Perfil S47 (3m)", val: Math.ceil(areaTotal * 1.70 / 3), unit: "un" },
             { label: "Regulador S47", val: Math.ceil(areaTotal * 1.25), unit: "un" },
@@ -424,11 +451,12 @@ function calcularDrywall() {
         ];
         resArea.innerText = formatNum(areaTotal) + " m²";
         labelChapas.innerText = "Chapas ST 12.5mm";
-        resChapas.innerText = formatNum(areaTotal * 1.05) + " m²";
+        chapasInfo = formatNum(areaTotal * 1.05) + " m²";
+        resChapas.innerText = chapasInfo;
         note = "* Sistema Gypsum FGE (Forro Gesso Estruturado). Recomenda-se uso de Perfis S47 e Tirantes.";
+        sistemaNome = "Forro Drywall FGE (Estruturado)";
     }
     else if (sistema === "revest-colado") {
-        // Revestimento Colado
         materials = [
             { label: "Cola Gypsum (Gesso Cola)", val: (areaTotal * 2.5).toFixed(1), unit: "kg" },
             { label: "Massa Rejunte", val: (areaTotal * 0.40).toFixed(1), unit: "kg" },
@@ -436,11 +464,12 @@ function calcularDrywall() {
         ];
         resArea.innerText = formatNum(areaTotal) + " m²";
         labelChapas.innerText = "Chapas ST/RU 12.5mm";
-        resChapas.innerText = formatNum(areaTotal * 1.05) + " m²";
+        chapasInfo = formatNum(areaTotal * 1.05) + " m²";
+        resChapas.innerText = chapasInfo;
         note = "* Revestimento Colado. Aplicação direta em paredes de alvenaria niveladas.";
+        sistemaNome = "Revestimento Drywall Colado";
     }
     else if (sistema === "revest-estrut") {
-        // Revestimento Estruturado (Contra-parede)
         materials = [
             { label: "Montante 48/60/70mm", val: Math.ceil(areaTotal * 2.50 / 3), unit: "un" },
             { label: "Guia Correspondente", val: Math.ceil(areaTotal * 0.80 / 3), unit: "un" },
@@ -450,11 +479,12 @@ function calcularDrywall() {
         ];
         resArea.innerText = formatNum(areaTotal) + " m²";
         labelChapas.innerText = "Chapas ST/RU/RF 12.5mm";
-        resChapas.innerText = formatNum(areaTotal * 1.05) + " m²";
+        chapasInfo = formatNum(areaTotal * 1.05) + " m²";
+        resChapas.innerText = chapasInfo;
         note = "* Revestimento Estruturado. Ideal para isolamento termoacústico e correção de prumo.";
+        sistemaNome = "Revestimento Drywall Estruturado";
     }
 
-    // Renderizar materiais dinâmicos
     materials.forEach(item => {
         const div = document.createElement("div");
         div.className = "result-item";
@@ -467,9 +497,22 @@ function calcularDrywall() {
 
     resultNote.innerText = note;
     document.getElementById("results-drywall").classList.add("show");
+
+    // Mensagem personalizada para o WhatsApp
+    const materiaisTexto = materials.map(m => `  • ${m.label}: ${m.val} ${m.unit}`).join("\n");
+    const msg = `Olá! Fiz o cálculo de *${sistemaNome}* no site de vocês e gostaria de um orçamento:
+
+📐 Área calculada: ${formatNum(areaTotal)} m²
+🗂️ *${labelChapas.innerText}*: ${chapasInfo}
+
+Outros materiais estimados:
+${materiaisTexto}
+
+Aguardo o orçamento, obrigado!`;
+    setWppBtn("btn-wpp-drywall", msg);
 }
 
-// PAPEL DE PAREDE
+// ===== PAPEL DE PAREDE =====
 function calcularPapel() {
     const larguraParede = parseFloat(document.getElementById("papel-largura").value);
     const alturaParede = parseFloat(document.getElementById("papel-altura").value);
@@ -481,7 +524,6 @@ function calcularPapel() {
     const areaParede = larguraParede * alturaParede;
     const areaRolo = larguraRolo * comprimentoRolo;
 
-    // 15% safety margin for pattern alignment (rapport)
     const areaComPerda = areaParede * 1.15;
     const rolos = Math.ceil(areaComPerda / areaRolo);
 
@@ -490,16 +532,25 @@ function calcularPapel() {
     document.getElementById("res-papel-area-rolo").innerText = formatNum(areaRolo) + " m²";
 
     document.getElementById("results-papel").classList.add("show");
+
+    // Mensagem personalizada para o WhatsApp
+    const msg = `Olá! Fiz o cálculo de *Papel de Parede* no site de vocês e gostaria de um orçamento:
+
+📐 Área da parede: ${formatNum(areaParede)} m²
+📦 Área por rolo (${larguraRolo}m x ${comprimentoRolo}m): ${formatNum(areaRolo)} m²
+🖼️ Quantidade de rolos necessária (com 15% de perda): *${rolos} rolos*
+
+Aguardo o orçamento, obrigado!`;
+    setWppBtn("btn-wpp-papel", msg);
 }
 
-// PERSIANAS
+// ===== PERSIANAS =====
 function calcularPersiana() {
     const larguraJanela = parseFloat(document.getElementById("persiana-largura").value);
     const alturaJanela = parseFloat(document.getElementById("persiana-altura").value);
 
     if (!larguraJanela || !alturaJanela) return;
 
-    // Standard overlap: 10cm each side (0.20m total)
     const larguraFinal = larguraJanela + 0.20;
     const alturaFinal = alturaJanela + 0.20;
     const areaTotal = larguraFinal * alturaFinal;
@@ -509,4 +560,14 @@ function calcularPersiana() {
     document.getElementById("res-persiana-altura").innerText = formatNum(alturaFinal) + " m";
 
     document.getElementById("results-persiana").classList.add("show");
+
+    // Mensagem personalizada para o WhatsApp
+    const msg = `Olá! Fiz o cálculo de *Persianas* no site de vocês e gostaria de um orçamento:
+
+🪟 Medidas da janela: ${larguraJanela}m (larg.) x ${alturaJanela}m (alt.)
+📏 Medidas finais com sobreposição: *${formatNum(larguraFinal)}m x ${formatNum(alturaFinal)}m*
+📐 Área total: ${formatNum(areaTotal)} m²
+
+Aguardo o orçamento, obrigado!`;
+    setWppBtn("btn-wpp-persiana", msg);
 }
