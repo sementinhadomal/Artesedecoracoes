@@ -1,6 +1,6 @@
 /**
  * LÓGICA DA PÁGINA DE VITRINE / DETALHES DO PRODUTO
- * Exibe especificações, imagens e botão para orçamento no WhatsApp.
+ * Suporta troca dinâmica de imagem ao selecionar opções/cores.
  */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -44,30 +44,35 @@ function loadProductDetails(sku) {
 
 function renderDetails(p) {
     const container = document.getElementById('product-container');
-    const imagem = p.imagem || 'https://via.placeholder.com/800x800?text=Sem+Imagem';
+    const capaImg = p.imagemCapa || p.imagem || 'https://via.placeholder.com/800x800?text=Sem+Imagem';
     const catNome = p.categoriaNome || p.categoria || 'Materiais';
 
-    // Render variant selectors HTML
-    let variantsSelectorsHtml = '';
-    if (p.variantes && p.variantes.length > 0) {
-        p.variantes.forEach((v, index) => {
-            const options = (v.valores || []).map(val => `<option value="${val}">${val}</option>`).join('');
-            variantsSelectorsHtml += `
-                <div class="variant-select-group" style="margin-bottom: 18px;">
-                    <label style="display: block; font-size: 0.88rem; font-weight: 700; color: #334155; margin-bottom: 6px;">
-                        ${v.nome}:
-                    </label>
-                    <select class="variant-input" data-varname="${v.nome}" style="width: 100%; padding: 12px 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 0.95rem; background: white; outline: none;">
-                        ${options}
-                    </select>
+    let selectedOption = null;
+
+    // Render interactive options chips with thumbnail
+    let optionsHtml = '';
+    if (p.opcoes && p.opcoes.length > 0) {
+        selectedOption = p.opcoes[0]; // Default to first option
+        optionsHtml = `
+            <div class="options-selection-box" style="margin-bottom: 25px;">
+                <label style="display: block; font-size: 0.9rem; font-weight: 700; color: #0E2954; margin-bottom: 10px;">
+                    Selecione a Opção / Cor desejada:
+                </label>
+                <div class="options-grid" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    ${p.opcoes.map((opt, idx) => `
+                        <div class="option-chip ${idx === 0 ? 'active' : ''}" data-idx="${idx}" style="display: flex; align-items: center; gap: 8px; padding: 8px 14px; border: 2px solid ${idx === 0 ? '#0E2954' : '#e2e8f0'}; background: ${idx === 0 ? '#f0f4fa' : 'white'}; border-radius: 12px; cursor: pointer; transition: 0.2s;">
+                            ${opt.imagem ? `<img src="${opt.imagem}" style="width: 28px; height: 28px; border-radius: 6px; object-fit: cover;">` : ''}
+                            <span style="font-size: 0.88rem; font-weight: 600; color: #1e293b;">${opt.nome}</span>
+                        </div>
+                    `).join('')}
                 </div>
-            `;
-        });
+            </div>
+        `;
     }
 
     container.innerHTML = `
         <div class="product-gallery">
-            <img src="${imagem}" alt="${p.nome}" id="main-img">
+            <img src="${(selectedOption && selectedOption.imagem) ? selectedOption.imagem : capaImg}" alt="${p.nome}" id="main-img">
         </div>
         <div class="product-info">
             <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
@@ -83,7 +88,7 @@ function renderDetails(p) {
             <div class="buy-box" style="margin-top: 30px;">
                 <h3 style="font-size: 1.1rem; color: #0E2954; margin-bottom: 15px;">Solicitar Orçamento Personalizado</h3>
                 
-                ${variantsSelectorsHtml}
+                ${optionsHtml}
 
                 <button id="btn-request-wpp" class="btn-buy" style="background: #25D366; border: none; cursor: pointer; width: 100%;">
                     <i class="fab fa-whatsapp" style="font-size: 1.4rem;"></i> Solicitar Orçamento no WhatsApp
@@ -108,17 +113,32 @@ function renderDetails(p) {
 
     document.title = `${p.nome} | Vitrine Artes e Decorações`;
 
+    // Handle Image Switching on Option Click
+    const optionChips = document.querySelectorAll(".option-chip");
+    optionChips.forEach(chip => {
+        chip.addEventListener("click", function() {
+            optionChips.forEach(c => {
+                c.style.borderColor = '#e2e8f0';
+                c.style.background = 'white';
+            });
+            this.style.borderColor = '#0E2954';
+            this.style.background = '#f0f4fa';
+
+            const idx = parseInt(this.dataset.idx);
+            selectedOption = p.opcoes[idx];
+
+            const mainImg = document.getElementById("main-img");
+            if (mainImg && selectedOption && selectedOption.imagem) {
+                mainImg.src = selectedOption.imagem;
+            }
+        });
+    });
+
     // WhatsApp Click Handler
     document.getElementById("btn-request-wpp").addEventListener("click", () => {
-        const variantInputs = document.querySelectorAll(".variant-input");
-        let selectedVariants = [];
-        variantInputs.forEach(input => {
-            selectedVariants.push(`${input.dataset.varname}: ${input.value}`);
-        });
-
         let msg = `Olá! Gostaria de solicitar um orçamento para o material *${p.nome}*.\n`;
-        if (selectedVariants.length > 0) {
-            msg += `*Opções Selecionadas:* ${selectedVariants.join(" | ")}\n`;
+        if (selectedOption) {
+            msg += `*Opção/Cor Escolhida:* ${selectedOption.nome}\n`;
         }
         msg += `\n_Vim pelo catálogo visual do site._`;
 

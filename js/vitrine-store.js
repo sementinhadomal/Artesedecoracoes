@@ -1,6 +1,6 @@
 /**
  * VITRINE STORE — Artes e Decorações
- * Gerenciador centralizado de produtos da vitrine no localStorage.
+ * Gerenciador centralizado de produtos e variações com suporte a imagem por opção.
  */
 
 const DEFAULT_VITRINE_PRODUCTS = [
@@ -11,10 +11,20 @@ const DEFAULT_VITRINE_PRODUCTS = [
         categoria: "pisos",
         categoriaNome: "Pisos Laminados",
         descricao: "Piso laminado de alta resistência a riscos e impactos, perfeito para ambientes residenciais e comerciais. Possui acabamento sofisticado com padrão amadeirado natural e tecnologia de instalação rápida por encaixe sem cola.",
-        imagem: "img/services/piso-laminado.jpg",
-        variantes: [
-            { nome: "Cores / Acabamentos", valores: ["Carvalho Munique", "Nogueira Ferrara", "Ipê Amarelo", "Cumaru"] },
-            { nome: "Espessura", valores: ["7mm", "8mm"] }
+        imagemCapa: "img/services/piso-laminado.jpg",
+        opcoes: [
+            {
+                nome: "Carvalho Munique",
+                imagem: "https://images.unsplash.com/photo-1581850518616-bcb8077fa2aa?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                nome: "Nogueira Ferrara",
+                imagem: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                nome: "Ipê Amarelo",
+                imagem: "https://images.unsplash.com/photo-1541123437800-1bb1317badc2?auto=format&fit=crop&w=800&q=80"
+            }
         ],
         destaque: true
     },
@@ -25,10 +35,16 @@ const DEFAULT_VITRINE_PRODUCTS = [
         categoria: "pisos",
         categoriaNome: "Pisos Vinílicos",
         descricao: "Piso vinílico 100% impermeável com textura agradável e excelente isolamento acústico. Ideal para cozinhas, salas, quartos e escritórios. Fácil limpeza e resistente à umidade.",
-        imagem: "https://images.unsplash.com/photo-1581850518616-bcb8077fa2aa?auto=format&fit=crop&w=800&q=80",
-        variantes: [
-            { nome: "Cores", valores: ["Cinza Concreto", "Carvalho Rústico", "Nogueira Clara"] },
-            { nome: "Espessura", valores: ["3mm", "4.2mm Click"] }
+        imagemCapa: "https://images.unsplash.com/photo-1581850518616-bcb8077fa2aa?auto=format&fit=crop&w=800&q=80",
+        opcoes: [
+            {
+                nome: "Cinza Concreto",
+                imagem: "https://images.unsplash.com/photo-1581850518616-bcb8077fa2aa?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                nome: "Carvalho Rústico",
+                imagem: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80"
+            }
         ],
         destaque: true
     },
@@ -39,27 +55,18 @@ const DEFAULT_VITRINE_PRODUCTS = [
         categoria: "forros",
         categoriaNome: "Forros",
         descricao: "Forro de PVC de alta qualidade, auto-extinguível, imune a cupins e umidade. Ideal para residências, escritórios e áreas comerciais. Não necessita de pintura e possui longa durabilidade.",
-        imagem: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&w=800&q=80",
-        variantes: [
-            { nome: "Modelo", valores: ["Frisotelado 200mm", "Liso Plastificado"] },
-            { nome: "Espessura", valores: ["8mm", "10mm"] },
-            { nome: "Comprimento", valores: ["3.00m", "4.00m", "6.00m"] }
+        imagemCapa: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&w=800&q=80",
+        opcoes: [
+            {
+                nome: "Modelo Frisotelado 200mm (Branco)",
+                imagem: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                nome: "Modelo Liso Plastificado",
+                imagem: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80"
+            }
         ],
         destaque: true
-    },
-    {
-        id: "forro-02",
-        sku: "FORRO-MOD-02",
-        nome: "Forro Modular Mineral Acústico",
-        categoria: "forros",
-        categoriaNome: "Forros",
-        descricao: "Forro modular removível com alto índice de absorção acústica e refletância luminosa. Excelente opção para auditórios, hospitais, escritórios e ambientes corporativos.",
-        imagem: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80",
-        variantes: [
-            { nome: "Borda", valores: ["Tegular", "Lay-in (Reto)"] },
-            { nome: "Dimensão", valores: ["618x618mm", "1250x625mm"] }
-        ],
-        destaque: false
     },
     {
         id: "drywall-01",
@@ -68,26 +75,18 @@ const DEFAULT_VITRINE_PRODUCTS = [
         categoria: "drywall",
         categoriaNome: "Drywall",
         descricao: "Chapa de gesso acartonado para execução de paredes internas, forros e revestimentos secos em áreas secas. Proporciona superfície lisa pronta para receber pintura ou acabamentos.",
-        imagem: "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=800&q=80",
-        variantes: [
-            { nome: "Espessura", valores: ["12.5mm", "15mm"] },
-            { nome: "Dimensão", valores: ["1.20x2.40m", "1.20x1.80m"] }
+        imagemCapa: "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=800&q=80",
+        opcoes: [
+            {
+                nome: "Espessura 12.5mm (1.20x2.40m)",
+                imagem: "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                nome: "Espessura 15.0mm (1.20x2.40m)",
+                imagem: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=800&q=80"
+            }
         ],
         destaque: true
-    },
-    {
-        id: "drywall-02",
-        sku: "DRY-RU-02",
-        nome: "Chapa Drywall Resistente à Umidade (RU Verde)",
-        categoria: "drywall",
-        categoriaNome: "Drywall",
-        descricao: "Chapa de gesso com aditivos hidrofugantes especialmente desenvolvida para áreas úmidas como banheiros, lavabos e cozinhas. Proteção superior contra umidade e fungos.",
-        imagem: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=800&q=80",
-        variantes: [
-            { nome: "Espessura", valores: ["12.5mm"] },
-            { nome: "Dimensão", valores: ["1.20x2.40m"] }
-        ],
-        destaque: false
     },
     {
         id: "div-01",
@@ -96,10 +95,20 @@ const DEFAULT_VITRINE_PRODUCTS = [
         categoria: "divisorias",
         categoriaNome: "Divisórias",
         descricao: "Painéis de divisória com miolo colmeia e acabamento melamínico de alta resistência. Ideais para organização de escritórios, salas de reunião e ambientes comerciais.",
-        imagem: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80",
-        variantes: [
-            { nome: "Cores dos Painéis", valores: ["Branco Neve", "Areia Jundiaí", "Cinza Ocidental", "Ovo"] },
-            { nome: "Cor dos Perfis", valores: ["Alumínio Anodizado", "Preto", "Branco"] }
+        imagemCapa: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80",
+        opcoes: [
+            {
+                nome: "Painel Branco Neve",
+                imagem: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                nome: "Painel Areia Jundiaí",
+                imagem: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                nome: "Painel Cinza Ocidental",
+                imagem: "https://images.unsplash.com/photo-1581850518616-bcb8077fa2aa?auto=format&fit=crop&w=800&q=80"
+            }
         ],
         destaque: true
     },
@@ -110,10 +119,20 @@ const DEFAULT_VITRINE_PRODUCTS = [
         categoria: "persianas",
         categoriaNome: "Persianas",
         descricao: "Persiana estilo Rolô com tecido técnico tela solar. Bloqueia raios UV e calor preservando a visibilidade para o ambiente externo. Design moderno e funcional.",
-        imagem: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80",
-        variantes: [
-            { nome: "Cores", valores: ["Branco", "Bege", "Cinza", "Preto"] },
-            { nome: "Acionamento", valores: ["Manual por Corrente", "Motorizado"] }
+        imagemCapa: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80",
+        opcoes: [
+            {
+                nome: "Tecido Branco",
+                imagem: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                nome: "Tecido Bege",
+                imagem: "https://images.unsplash.com/photo-1541123437800-1bb1317badc2?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                nome: "Tecido Cinza Grafite",
+                imagem: "https://images.unsplash.com/photo-1581850518616-bcb8077fa2aa?auto=format&fit=crop&w=800&q=80"
+            }
         ],
         destaque: true
     },
@@ -124,9 +143,16 @@ const DEFAULT_VITRINE_PRODUCTS = [
         categoria: "papel-parede",
         categoriaNome: "Papel de Parede",
         descricao: "Papel de parede vinílico super lavável com textura em alto relevo. Ideal para renovar salas, quartos e corredores com elegância e praticidade.",
-        imagem: "https://images.unsplash.com/photo-1615873968403-89e068629265?auto=format&fit=crop&w=800&q=80",
-        variantes: [
-            { nome: "Estilo", valores: ["Geométrico", "Cimento Queimado", "Floral Clássico", "Tijolo 3D"] }
+        imagemCapa: "https://images.unsplash.com/photo-1615873968403-89e068629265?auto=format&fit=crop&w=800&q=80",
+        opcoes: [
+            {
+                nome: "Estampa Geométrica Gold",
+                imagem: "https://images.unsplash.com/photo-1615873968403-89e068629265?auto=format&fit=crop&w=800&q=80"
+            },
+            {
+                nome: "Estampa Cimento Queimado",
+                imagem: "https://images.unsplash.com/photo-1581850518616-bcb8077fa2aa?auto=format&fit=crop&w=800&q=80"
+            }
         ],
         destaque: false
     }

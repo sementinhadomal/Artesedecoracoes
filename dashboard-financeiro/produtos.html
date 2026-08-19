@@ -4,40 +4,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciador de Vitrine de Produtos | Artes e Decorações</title>
+    <title>Vitrine de Produtos | Artes e Decorações - Admin</title>
     <link rel="stylesheet" href="/dashboard-financeiro/style.css">
-    <link rel="stylesheet" href="/dashboard-financeiro/leads.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="/dashboard-financeiro/js/auth-check.js"></script>
     <style>
+        /* ===== ADMIN PRODUCTS DASHBOARD STYLES ===== */
         .prod-grid-admin {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+            gap: 24px;
+            margin-top: 24px;
         }
 
         .prod-card-admin {
-            background: white;
-            border-radius: 14px;
+            background: rgba(14, 41, 84, 0.45);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(246, 186, 59, 0.2);
+            border-radius: 16px;
             overflow: hidden;
-            border: 1px solid #e2e8f0;
             display: flex;
             flex-direction: column;
-            transition: 0.2s;
+            transition: all 0.3s ease;
         }
 
         .prod-card-admin:hover {
-            border-color: #0E2954;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            border-color: #F6BA3B;
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
 
         .prod-card-admin-img {
-            height: 160px;
-            background: #f8fafc;
+            height: 170px;
+            background: rgba(5, 20, 38, 0.6);
             position: relative;
+            overflow: hidden;
         }
 
         .prod-card-admin-img img {
@@ -46,43 +49,164 @@
             object-fit: cover;
         }
 
+        .card-cat-tag {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #F6BA3B;
+            color: #0E2954;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
         .prod-card-admin-body {
-            padding: 16px;
+            padding: 18px;
             display: flex;
             flex-direction: column;
             flex: 1;
         }
 
         .prod-card-admin-body h4 {
-            font-size: 1rem;
-            color: #0E2954;
-            margin-bottom: 6px;
+            font-size: 1.05rem;
+            color: white;
+            margin-bottom: 4px;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .prod-card-admin-sku {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-bottom: 10px;
         }
 
         .prod-card-admin-desc {
-            font-size: 0.82rem;
-            color: #64748b;
+            font-size: 0.83rem;
+            color: #cbd5e1;
             line-height: 1.4;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             flex: 1;
+        }
+
+        .prod-options-badge {
+            font-size: 0.78rem;
+            color: #F6BA3B;
+            background: rgba(246, 186, 59, 0.1);
+            padding: 5px 10px;
+            border-radius: 6px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .prod-card-admin-meta {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
             padding-top: 12px;
-            border-top: 1px solid #f1f5f9;
+            border-top: 1px solid rgba(255,255,255,0.08);
             margin-top: auto;
         }
 
-        /* Modal styling */
+        .btn-card-action {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: rgba(255,255,255,0.05);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-card-action:hover {
+            background: #F6BA3B;
+            color: #0E2954;
+            border-color: #F6BA3B;
+        }
+
+        .btn-card-delete:hover {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+        }
+
+        /* ===== TOOLBAR & FILTERS ===== */
+        .admin-toolbar {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 20px;
+        }
+
+        .admin-search-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(5, 20, 38, 0.8);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            width: 100%;
+        }
+
+        .admin-search-box i {
+            color: #94a3b8;
+        }
+
+        .admin-search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            color: white;
+            font-size: 0.95rem;
+            width: 100%;
+            padding: 0;
+        }
+
+        .admin-cat-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .admin-cat-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.05);
+            color: #cbd5e1;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            width: auto !important; /* Ensure buttons don't stretch */
+        }
+
+        .admin-cat-btn:hover, .admin-cat-btn.active {
+            background: #F6BA3B;
+            color: #0E2954;
+            border-color: #F6BA3B;
+        }
+
+        /* ===== MODAL STYLES (Clean & Structured) ===== */
         .modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(4px);
+            background: rgba(2, 6, 23, 0.85);
+            backdrop-filter: blur(8px);
             z-index: 9999;
             align-items: center;
             justify-content: center;
@@ -94,86 +218,152 @@
         }
 
         .modal-box {
-            background: white;
-            border-radius: 16px;
-            max-width: 600px;
+            background: #0E2954;
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            max-width: 650px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
             padding: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+            color: white;
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
         .modal-header h3 {
-            color: #0E2954;
-            font-size: 1.25rem;
+            color: #F6BA3B;
+            font-size: 1.3rem;
+            font-family: 'Outfit', sans-serif;
         }
 
         .modal-close {
-            background: none;
+            background: rgba(255,255,255,0.08);
             border: none;
-            font-size: 1.3rem;
             color: #94a3b8;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
             cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .modal-close:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        .modal-section-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #F6BA3B;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 12px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
         }
 
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 16px;
         }
 
         .form-group-full {
             grid-column: 1 / -1;
         }
 
-        .form-group label {
+        .modal-box label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             font-weight: 600;
-            color: #334155;
+            color: #cbd5e1;
             margin-bottom: 6px;
         }
 
-        .form-group input, .form-group select, .form-group textarea {
+        .modal-box input, .modal-box select, .modal-box textarea {
             width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
+            padding: 12px 14px;
+            background: rgba(5, 20, 38, 0.9);
+            border: 1px solid rgba(246, 186, 59, 0.3);
+            border-radius: 10px;
+            color: white;
             font-size: 0.92rem;
             outline: none;
+            font-family: 'Inter', sans-serif;
         }
 
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            border-color: #0E2954;
+        .modal-box input:focus, .modal-box select:focus, .modal-box textarea:focus {
+            border-color: #F6BA3B;
+            box-shadow: 0 0 0 3px rgba(246, 186, 59, 0.15);
         }
 
-        .btn-add-prod {
-            background: #0E2954;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            cursor: pointer;
-            display: flex;
+        /* Options list in modal */
+        .option-row-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr 36px;
+            gap: 10px;
             align-items: center;
-            gap: 8px;
-            transition: 0.2s;
+            background: rgba(5, 20, 38, 0.6);
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255,255,255,0.08);
         }
 
-        .btn-add-prod:hover {
-            background: #1a4aa8;
+        .btn-add-option-row {
+            background: rgba(246, 186, 59, 0.15);
+            color: #F6BA3B;
+            border: 1px dashed #F6BA3B;
+            padding: 10px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .btn-add-option-row:hover {
+            background: #F6BA3B;
+            color: #0E2954;
+            box-shadow: none;
+        }
+
+        .btn-modal-submit {
+            background: linear-gradient(135deg, #F6BA3B, #DDA117);
+            color: #0E2954;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-modal-cancel {
+            background: rgba(255,255,255,0.08);
+            color: white;
+            padding: 14px 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.15);
+            font-weight: 600;
+            cursor: pointer;
+            width: auto;
+            text-transform: none;
+            letter-spacing: normal;
         }
     </style>
 </head>
@@ -222,31 +412,31 @@
             <header style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
                     <h1>Vitrine de Produtos</h1>
-                    <div class="text-muted">Gerencie quais materiais aparecem no catálogo do site.</div>
+                    <div class="text-muted">Gerencie o catálogo visual e as opções/fotos exibidas no site.</div>
                 </div>
-                <button class="btn-add-prod" onclick="openAddModal()">
-                    <i class="fas fa-plus"></i> Adicionar Novo Material
+                <button type="button" class="btn-primary" onclick="openAddModal()" style="width: auto; padding: 12px 24px;">
+                    <i class="fas fa-plus"></i> Novo Material
                 </button>
             </header>
 
-            <!-- Filters Bar -->
-            <div class="glass-card leads-toolbar" style="margin-top: 25px;">
-                <div class="leads-search">
+            <!-- Filters & Search Bar -->
+            <div class="glass-card admin-toolbar">
+                <div class="admin-search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" id="admin-search" placeholder="Buscar material por nome ou código...">
+                    <input type="text" id="admin-search" placeholder="Buscar material por nome ou código SKU...">
                 </div>
-                <div class="leads-filters">
-                    <button class="filter-tag active" data-cat="all">Todos</button>
-                    <button class="filter-tag" data-cat="pisos">🪵 Pisos</button>
-                    <button class="filter-tag" data-cat="forros">🏗️ Forros</button>
-                    <button class="filter-tag" data-cat="drywall">🧱 Drywall</button>
-                    <button class="filter-tag" data-cat="divisorias">🚪 Divisórias</button>
-                    <button class="filter-tag" data-cat="persianas">🪟 Persianas</button>
-                    <button class="filter-tag" data-cat="papel-parede">🎨 Papel Parede</button>
+                <div class="admin-cat-filters">
+                    <button type="button" class="admin-cat-btn active" data-cat="all">Todos</button>
+                    <button type="button" class="admin-cat-btn" data-cat="pisos">🪵 Pisos</button>
+                    <button type="button" class="admin-cat-btn" data-cat="forros">🏗️ Forros</button>
+                    <button type="button" class="admin-cat-btn" data-cat="drywall">🧱 Drywall</button>
+                    <button type="button" class="admin-cat-btn" data-cat="divisorias">🚪 Divisórias</button>
+                    <button type="button" class="admin-cat-btn" data-cat="persianas">🪟 Persianas</button>
+                    <button type="button" class="admin-cat-btn" data-cat="papel-parede">🎨 Papel Parede</button>
                 </div>
             </div>
 
-            <!-- Products List Grid -->
+            <!-- Products Grid -->
             <div id="admin-prod-grid" class="prod-grid-admin">
                 <!-- Injected via JS -->
             </div>
@@ -257,20 +447,22 @@
     <div class="modal-overlay" id="product-modal">
         <div class="modal-box">
             <div class="modal-header">
-                <h3 id="modal-title">Adicionar Material</h3>
-                <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+                <h3 id="modal-title">Adicionar Material à Vitrine</h3>
+                <button type="button" class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
             </div>
             <form id="product-form" onsubmit="saveProduct(event)">
                 <input type="hidden" id="prod-id">
 
+                <div class="modal-section-title">1. Dados Básicos do Produto</div>
+
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Nome do Material / Produto *</label>
-                        <input type="text" id="prod-nome" required placeholder="Ex: Piso Laminado Durafloor">
+                        <label>Nome do Material *</label>
+                        <input type="text" id="prod-nome" required placeholder="Ex: Piso Laminado Durafloor Unique">
                     </div>
                     <div class="form-group">
                         <label>Código / SKU *</label>
-                        <input type="text" id="prod-sku" required placeholder="Ex: PISO-001">
+                        <input type="text" id="prod-sku" required placeholder="Ex: PISO-LAM-01">
                     </div>
                     <div class="form-group">
                         <label>Categoria *</label>
@@ -285,25 +477,31 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Link da Imagem (URL) *</label>
-                        <input type="url" id="prod-imagem" required placeholder="https://exemplo.com/imagem.jpg">
+                        <label>Foto de Capa da Vitrine (URL) *</label>
+                        <input type="url" id="prod-imagem" required placeholder="https://exemplo.com/foto-capa.jpg">
                     </div>
                     <div class="form-group form-group-full">
                         <label>Descrição / Explicação do Produto *</label>
-                        <textarea id="prod-descricao" rows="3" required placeholder="Descreva as qualidades, acabamento e onde é indicado..."></textarea>
-                    </div>
-                    <div class="form-group form-group-full">
-                        <label>Variantes / Opções (Separe por vírgulas)</label>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                            <input type="text" id="var-nome" placeholder="Nome da Variante (Ex: Cores)">
-                            <input type="text" id="var-valores" placeholder="Valores (Ex: Carvalho, Nogueira, Ipê)">
-                        </div>
+                        <textarea id="prod-descricao" rows="3" required placeholder="Explicação técnica, vantagens e onde é recomendado aplicar..."></textarea>
                     </div>
                 </div>
 
-                <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 25px;">
-                    <button type="button" onclick="closeModal()" style="padding: 10px 18px; border-radius: 8px; border: 1px solid #cbd5e1; background: white; cursor: pointer;">Cancelar</button>
-                    <button type="submit" style="padding: 10px 24px; border-radius: 8px; border: none; background: #0E2954; color: white; font-weight: 700; cursor: pointer;">Salvar Produto</button>
+                <div class="modal-section-title">2. Opções & Cores (Cada uma com sua Foto)</div>
+                <p style="font-size: 0.8rem; color: #94a3b8; margin-bottom: 12px;">
+                    Adicione os modelos/cores disponíveis. Ao clicar em cada cor na vitrine, a foto principal mudará para a imagem informada.
+                </p>
+
+                <div id="options-container">
+                    <!-- Option rows dynamically injected -->
+                </div>
+
+                <button type="button" class="btn-add-option-row" onclick="addOptionRow()">
+                    <i class="fas fa-plus-circle"></i> + Adicionar Opção / Cor com Imagem
+                </button>
+
+                <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 30px;">
+                    <button type="button" class="btn-modal-cancel" onclick="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn-modal-submit">Salvar Produto na Vitrine</button>
                 </div>
             </form>
         </div>
@@ -327,10 +525,10 @@
 
             if (filtered.length === 0) {
                 grid.innerHTML = `
-                    <div style="grid-column: 1/-1; text-align: center; padding: 60px; background: white; border-radius: 16px; border: 1px solid #e2e8f0;">
-                        <i class="fas fa-box-open fa-3x" style="color: #cbd5e1; margin-bottom: 15px;"></i>
-                        <h3>Nenhum material encontrado</h3>
-                        <p style="color: #64748b;">Nenhum produto cadastrado para esse filtro.</p>
+                    <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; background: rgba(14, 41, 84, 0.3); border-radius: 16px; border: 1px dashed var(--glass-border);">
+                        <i class="fas fa-box-open fa-3x" style="color: #64748b; margin-bottom: 15px;"></i>
+                        <h3 style="color: white;">Nenhum material encontrado</h3>
+                        <p style="color: #94a3b8;">Nenhum produto cadastrado para essa busca ou categoria.</p>
                     </div>
                 `;
                 return;
@@ -343,23 +541,27 @@
                     'papel-parede': 'Papel de Parede', ferramentas: 'Ferramentas'
                 };
                 const catName = catMap[p.categoria] || p.categoria;
-                const img = p.imagem || 'https://via.placeholder.com/400x300?text=Sem+Imagem';
+                const img = p.imagemCapa || p.imagem || 'https://via.placeholder.com/400x300?text=Sem+Imagem';
+                const optsCount = p.opcoes ? p.opcoes.length : 0;
 
                 return `
                 <div class="prod-card-admin">
                     <div class="prod-card-admin-img">
-                        <span class="tipo-tag tipo-pf" style="position: absolute; top: 10px; left: 10px; z-index: 2;">${catName}</span>
+                        <span class="card-cat-tag">${catName}</span>
                         <img src="${img}" alt="${p.nome}" onerror="this.src='https://via.placeholder.com/400x300?text=Imagem+Indisponivel'">
                     </div>
                     <div class="prod-card-admin-body">
                         <h4>${p.nome}</h4>
-                        <div style="font-size: 0.75rem; color: #94a3b8; margin-bottom: 8px;">SKU: ${p.sku}</div>
-                        <div class="prod-card-admin-desc">${p.descricao ? (p.descricao.length > 70 ? p.descricao.substring(0, 70) + '...' : p.descricao) : ''}</div>
+                        <div class="prod-card-admin-sku">SKU: ${p.sku}</div>
+                        <div class="prod-card-admin-desc">${p.descricao ? (p.descricao.length > 75 ? p.descricao.substring(0, 75) + '...' : p.descricao) : ''}</div>
+                        <div class="prod-options-badge">
+                            <i class="fas fa-palette"></i> ${optsCount} opção(ões) / cor(es) com foto
+                        </div>
                         <div class="prod-card-admin-meta">
-                            <button onclick="editProduct('${p.id}')" class="btn-action btn-view" title="Editar">
+                            <button type="button" onclick="editProduct('${p.id}')" class="btn-card-action" title="Editar">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button onclick="deleteProduct('${p.id}')" class="btn-action btn-delete" title="Excluir">
+                            <button type="button" onclick="deleteProduct('${p.id}')" class="btn-card-action btn-card-delete" title="Excluir">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -368,10 +570,10 @@
             }).join('');
         }
 
-        // Filters
-        document.querySelectorAll('.filter-tag').forEach(btn => {
+        // Filter Tags Logic
+        document.querySelectorAll('.admin-cat-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-tag').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.admin-cat-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 activeCatFilter = btn.dataset.cat;
                 renderAdminProducts();
@@ -383,11 +585,29 @@
             renderAdminProducts();
         });
 
+        // Dynamic Options Rows
+        function addOptionRow(nome = '', imagem = '') {
+            const container = document.getElementById("options-container");
+            const div = document.createElement("div");
+            div.className = "option-row-item";
+            div.innerHTML = `
+                <input type="text" class="opt-name" value="${nome}" placeholder="Nome da Cor / Opção (Ex: Carvalho Munique)" required>
+                <input type="url" class="opt-img" value="${imagem}" placeholder="Link da Foto dessa Cor (URL)" required>
+                <button type="button" onclick="this.parentElement.remove()" style="background:#ef4444; color:white; border:none; border-radius:8px; width:36px; height:36px; cursor:pointer;" title="Remover"><i class="fas fa-trash"></i></button>
+            `;
+            container.appendChild(div);
+        }
+
         // Modal Logic
         function openAddModal() {
-            document.getElementById('modal-title').textContent = "Adicionar Novo Material";
+            document.getElementById('modal-title').textContent = "Adicionar Novo Material à Vitrine";
             document.getElementById('product-form').reset();
             document.getElementById('prod-id').value = "";
+            document.getElementById('options-container').innerHTML = "";
+            
+            // Add 1 default option row
+            addOptionRow();
+            
             document.getElementById('product-modal').classList.add('active');
         }
 
@@ -395,20 +615,21 @@
             const p = currentProducts.find(item => item.id === id);
             if (!p) return;
 
-            document.getElementById('modal-title').textContent = "Editar Material";
+            document.getElementById('modal-title').textContent = "Editar Material da Vitrine";
             document.getElementById('prod-id').value = p.id;
-            document.getElementById('prod-nome').value = p.nome;
-            document.getElementById('prod-sku').value = p.sku;
-            document.getElementById('prod-categoria').value = p.categoria;
-            document.getElementById('prod-imagem').value = p.imagem;
-            document.getElementById('prod-descricao').value = p.descricao;
+            document.getElementById('prod-nome').value = p.nome || '';
+            document.getElementById('prod-sku').value = p.sku || '';
+            document.getElementById('prod-categoria').value = p.categoria || 'pisos';
+            document.getElementById('prod-imagem').value = p.imagemCapa || p.imagem || '';
+            document.getElementById('prod-descricao').value = p.descricao || '';
 
-            if (p.variantes && p.variantes.length > 0) {
-                document.getElementById('var-nome').value = p.variantes[0].nome || "";
-                document.getElementById('var-valores').value = p.variantes[0].valores ? p.variantes[0].valores.join(', ') : "";
+            const container = document.getElementById('options-container');
+            container.innerHTML = "";
+
+            if (p.opcoes && p.opcoes.length > 0) {
+                p.opcoes.forEach(opt => addOptionRow(opt.nome, opt.imagem));
             } else {
-                document.getElementById('var-nome').value = "";
-                document.getElementById('var-valores').value = "";
+                addOptionRow();
             }
 
             document.getElementById('product-modal').classList.add('active');
@@ -424,19 +645,22 @@
             const nome = document.getElementById('prod-nome').value.trim();
             const sku = document.getElementById('prod-sku').value.trim();
             const categoria = document.getElementById('prod-categoria').value;
-            const imagem = document.getElementById('prod-imagem').value.trim();
+            const imagemCapa = document.getElementById('prod-imagem').value.trim();
             const descricao = document.getElementById('prod-descricao').value.trim();
 
-            const varNome = document.getElementById('var-nome').value.trim();
-            const varValores = document.getElementById('var-valores').value.trim();
-
-            let variantes = [];
-            if (varNome && varValores) {
-                variantes.push({
-                    nome: varNome,
-                    valores: varValores.split(',').map(s => s.trim()).filter(Boolean)
-                });
-            }
+            // Collect options
+            const optionRows = document.querySelectorAll('.option-row-item');
+            let opcoes = [];
+            optionRows.forEach(row => {
+                const optName = row.querySelector('.opt-name').value.trim();
+                const optImg = row.querySelector('.opt-img').value.trim();
+                if (optName) {
+                    opcoes.push({
+                        nome: optName,
+                        imagem: optImg || imagemCapa
+                    });
+                }
+            });
 
             const catMap = {
                 pisos: 'Pisos', forros: 'Forros', drywall: 'Drywall',
@@ -451,8 +675,8 @@
                 categoria: categoria,
                 categoriaNome: catMap[categoria] || categoria,
                 descricao: descricao,
-                imagem: imagem,
-                variantes: variantes
+                imagemCapa: imagemCapa,
+                opcoes: opcoes
             };
 
             const existingIndex = currentProducts.findIndex(p => p.id === id);

@@ -24,7 +24,6 @@ function loadProducts() {
     const grid = document.getElementById("product-grid");
     if (!grid) return;
 
-    // Tentar carregar do Vitrine Store ou LocalStorage
     let products = [];
     if (typeof getVitrineProducts === 'function') {
         products = getVitrineProducts();
@@ -67,19 +66,20 @@ function renderProducts(products) {
         card.setAttribute("data-name", p.nome || '');
         card.setAttribute("data-category", p.categoria || 'all');
 
-        const imagem = p.imagem || 'https://via.placeholder.com/400x300?text=Sem+Imagem';
+        const imagem = p.imagemCapa || p.imagem || 'https://via.placeholder.com/400x300?text=Sem+Imagem';
         const nome = p.nome || 'Material';
         const catName = p.categoriaNome || getCategoryName(p.categoria);
         const desc = p.descricao
             ? (p.descricao.length > 90 ? p.descricao.substring(0, 90) + "..." : p.descricao)
             : 'Material de alta qualidade para obra e acabamento.';
 
-        // Render variants preview tags
+        // Render options preview (e.g. 3 opções de cores disponíveis)
         let variantsHtml = '';
-        if (p.variantes && p.variantes.length > 0) {
-            const firstVar = p.variantes[0];
-            const vals = firstVar.valores ? firstVar.valores.slice(0, 3).join(', ') : '';
-            variantsHtml = `<div class="product-variant-preview"><i class="fas fa-sliders-h"></i> ${firstVar.nome}: <strong>${vals}</strong></div>`;
+        if (p.opcoes && p.opcoes.length > 0) {
+            const count = p.opcoes.length;
+            const names = p.opcoes.slice(0, 2).map(o => o.nome).join(', ');
+            const extra = count > 2 ? ` (+${count - 2})` : '';
+            variantsHtml = `<div class="product-variant-preview"><i class="fas fa-palette"></i> Opções: <strong>${names}${extra}</strong></div>`;
         }
 
         card.onclick = () => window.location.href = `produto.html?sku=${p.sku || p.id}`;
@@ -94,7 +94,7 @@ function renderProducts(products) {
                 <p class="product-card-desc">${desc}</p>
                 ${variantsHtml}
                 <button type="button" class="product-card-btn">
-                    <i class="fas fa-eye"></i> Ver Vitrine & Orçamento
+                    <i class="fas fa-eye"></i> Ver Opções & Orçamento
                 </button>
             </div>
         `;
