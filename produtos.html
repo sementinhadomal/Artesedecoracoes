@@ -326,27 +326,28 @@
 
         .card-buttons-row {
             display: flex;
-            gap: 8px;
+            flex-direction: column;
+            gap: 6px;
             margin-top: 14px;
         }
 
         .btn-card-view {
-            flex: 1;
+            width: 100%;
             background: #0E2954;
             color: white;
             border: none;
             border-radius: 8px;
-            padding: 10px 6px;
-            font-size: 0.76rem;
+            padding: 9px 12px;
+            font-size: 0.8rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
             text-decoration: none;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 6px;
             white-space: nowrap;
             font-family: 'Inter', sans-serif;
         }
@@ -356,22 +357,22 @@
         }
 
         .btn-card-price-wpp {
-            flex: 1;
+            width: 100%;
             background: #25D366;
             color: white;
             border: none;
             border-radius: 8px;
-            padding: 10px 6px;
-            font-size: 0.76rem;
+            padding: 9px 12px;
+            font-size: 0.8rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
             text-decoration: none;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
-            gap: 4px;
+            gap: 6px;
             white-space: nowrap;
             font-family: 'Inter', sans-serif;
         }
@@ -379,6 +380,72 @@
         .btn-card-price-wpp:hover {
             background: #1da851;
             box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+        }
+
+        /* Responsive 3-Column Grid for Mobile */
+        @media (max-width: 768px) {
+            #product-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 8px !important;
+            }
+
+            .product-card {
+                border-radius: 10px !important;
+            }
+
+            .product-card-img {
+                height: 110px !important;
+            }
+
+            .product-card-body {
+                padding: 8px !important;
+            }
+
+            .product-card-body h4 {
+                font-size: 0.75rem !important;
+                margin-bottom: 4px !important;
+                min-height: 2.4em;
+                line-height: 1.25;
+            }
+
+            .product-card-desc {
+                display: none !important; /* Hide description on mobile 3-col grid */
+            }
+
+            .card-cat-badge {
+                font-size: 0.58rem !important;
+                padding: 2px 6px !important;
+                top: 6px !important;
+                left: 6px !important;
+            }
+
+            .card-buttons-row {
+                gap: 4px !important;
+                margin-top: 6px !important;
+            }
+
+            .btn-card-view {
+                padding: 6px 2px !important;
+                font-size: 0.65rem !important;
+                border-radius: 6px !important;
+            }
+
+            .btn-card-price-wpp {
+                padding: 6px 2px !important;
+                font-size: 0.65rem !important;
+                border-radius: 6px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #product-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 6px !important;
+            }
+
+            .btn-card-view span, .btn-card-price-wpp span {
+                display: inline;
+            }
         }
 
         /* No Results */
@@ -477,63 +544,7 @@
                 <a href="#" class="cat-tag" data-category="ferramentas"><i class="fas fa-tools"></i> Ferramentas</a>
             </div>
 
-            <!-- Featured Category Blocks -->
-            <div class="featured-categories">
-                <!-- Pisos -->
-                <div class="feat-cat-card" style="--bg-color:#0f2d6b; --bg-color-end:#1a4aa8" onclick="filterCategory('pisos')">
-                    <div class="bg-overlay" style="background: linear-gradient(160deg, #0f2d6b 0%, #1a4aa8 100%);"></div>
-                    <div class="cat-content">
-                        <span class="cat-icon">🪵</span>
-                        <h3>Pisos</h3>
-                        <p>Laminados, Vinílicos e Cerâmicos</p>
-                    </div>
-                </div>
-                <!-- Forros -->
-                <div class="feat-cat-card" onclick="filterCategory('forros')">
-                    <div class="bg-overlay" style="background: linear-gradient(160deg, #064e3b 0%, #059669 100%);"></div>
-                    <div class="cat-content">
-                        <span class="cat-icon">🏗️</span>
-                        <h3>Forros</h3>
-                        <p>PVC, Modular, Isofônico e mais</p>
-                    </div>
-                </div>
-                <!-- Drywall -->
-                <div class="feat-cat-card" onclick="filterCategory('drywall')">
-                    <div class="bg-overlay" style="background: linear-gradient(160deg, #7c2d12 0%, #ea580c 100%);"></div>
-                    <div class="cat-content">
-                        <span class="cat-icon">🧱</span>
-                        <h3>Drywall</h3>
-                        <p>Chapas, Perfis e Acessórios</p>
-                    </div>
-                </div>
-                <!-- Divisórias -->
-                <div class="feat-cat-card" onclick="filterCategory('divisorias')">
-                    <div class="bg-overlay" style="background: linear-gradient(160deg, #4a1d96 0%, #7c3aed 100%);"></div>
-                    <div class="cat-content">
-                        <span class="cat-icon">🚪</span>
-                        <h3>Divisórias</h3>
-                        <p>Eucatex, PVC e Alumínio</p>
-                    </div>
-                </div>
-                <!-- Persianas -->
-                <div class="feat-cat-card" onclick="filterCategory('persianas')">
-                    <div class="bg-overlay" style="background: linear-gradient(160deg, #7f1d1d 0%, #dc2626 100%);"></div>
-                    <div class="cat-content">
-                        <span class="cat-icon">🪟</span>
-                        <h3>Persianas</h3>
-                        <p>Rolo, Romana, Vertical e mais</p>
-                    </div>
-                </div>
-                <!-- Papel de Parede -->
-                <div class="feat-cat-card" onclick="filterCategory('papel-parede')">
-                    <div class="bg-overlay" style="background: linear-gradient(160deg, #1e3a5f 0%, #0891b2 100%);"></div>
-                    <div class="cat-content">
-                        <span class="cat-icon">🎨</span>
-                        <h3>Papel de Parede</h3>
-                        <p>Decorativo, Texturizado e mais</p>
-                    </div>
-                </div>
-            </div>
+
 
             <!-- Products Section -->
             <div class="products-header">
