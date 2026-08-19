@@ -73,15 +73,6 @@ function renderProducts(products) {
             ? (p.descricao.length > 90 ? p.descricao.substring(0, 90) + "..." : p.descricao)
             : 'Material de alta qualidade para obra e acabamento.';
 
-        // Render options preview (e.g. 3 opções de cores disponíveis)
-        let variantsHtml = '';
-        if (p.opcoes && p.opcoes.length > 0) {
-            const count = p.opcoes.length;
-            const names = p.opcoes.slice(0, 2).map(o => o.nome).join(', ');
-            const extra = count > 2 ? ` (+${count - 2})` : '';
-            variantsHtml = `<div class="product-variant-preview"><i class="fas fa-palette"></i> Opções: <strong>${names}${extra}</strong></div>`;
-        }
-
         card.onclick = () => window.location.href = `produto.html?sku=${p.sku || p.id}`;
 
         card.innerHTML = `
@@ -92,7 +83,6 @@ function renderProducts(products) {
             <div class="product-card-body">
                 <h4>${nome}</h4>
                 <p class="product-card-desc">${desc}</p>
-                ${variantsHtml}
                 <button type="button" class="product-card-btn">
                     <i class="fas fa-eye"></i> Ver Opções & Orçamento
                 </button>
