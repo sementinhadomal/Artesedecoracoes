@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // ---- Mensagem WhatsApp ----
         let message = "";
         if (tipo === "PJ") {
-            message += `*🚨 NOVO CADASTRO PJ (B2B)*\n`;
+            message += `*🚨 NOVO CADASTRO PJ (CORPORATIVO)*\n`;
             message += `_Este cadastro precisa ser analisado para liberação da tabela corporativa._\n\n`;
         } else {
             message += `*📝 NOVO CADASTRO PF*\n\n`;

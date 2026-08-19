@@ -126,7 +126,7 @@
                     <button class="filter-tag" data-filter="novo">🔴 Novos</button>
                     <button class="filter-tag" data-filter="cadastro">📝 Cadastros</button>
                     <button class="filter-tag" data-filter="contato">💬 Contatos</button>
-                    <button class="filter-tag" data-filter="PJ">🏢 PJ / B2B</button>
+                    <button class="filter-tag" data-filter="PJ">🏢 PJ / Empresas</button>
                 </div>
                 <button class="btn-clear-demo" onclick="addDemoData()">
                     <i class="fas fa-plus"></i> Adicionar Dados Demo
@@ -232,7 +232,7 @@
 
         function tipoLabel(lead) {
             if (lead.origem === "contato") return '<span class="tipo-tag tipo-contato">💬 Contato</span>';
-            if (lead.tipo === "PJ") return '<span class="tipo-tag tipo-pj">🏢 PJ / B2B</span>';
+            if (lead.tipo === "PJ") return '<span class="tipo-tag tipo-pj">🏢 PJ / Empresas</span>';
             return '<span class="tipo-tag tipo-pf">👤 PF</span>';
         }
 
