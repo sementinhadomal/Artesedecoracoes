@@ -387,35 +387,54 @@ section {
         color: white;
 }
 
-/* WhatsApp Floating */
+/* WhatsApp Floating - Horizontal Pill Button */
 .whatsapp-float {
         position: fixed !important;
-        bottom: 25px !important;
-        right: 25px !important;
+        bottom: 22px !important;
+        right: 20px !important;
         left: auto !important;
-        width: 65px !important;
-        height: 65px !important;
-        border-radius: 50%;
+        background: #25D366;
+        color: white !important;
+        border-radius: 50px;
         display: flex;
         align-items: center;
-        justify-content: center;
+        gap: 10px;
+        padding: 13px 20px;
         z-index: 9999;
         transition: var(--transition);
         text-decoration: none !important;
-        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+        font-weight: 700;
+        font-size: 0.95rem;
+        box-shadow: 0 4px 18px rgba(37, 211, 102, 0.45);
+        white-space: nowrap;
 }
 
-.whatsapp-float img {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        object-fit: cover;
-        transition: var(--transition);
+.whatsapp-float i {
+        font-size: 1.3rem;
+        flex-shrink: 0;
+}
+
+.whatsapp-float span {
+        font-family: 'Inter', sans-serif;
+        letter-spacing: 0.2px;
 }
 
 .whatsapp-float:hover {
-        transform: scale(1.1) rotate(5deg);
-        filter: drop-shadow(0 6px 20px rgba(37, 211, 102, 0.5));
+        background: #1ebc59;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 28px rgba(37, 211, 102, 0.55);
+        color: white !important;
+}
+
+/* On very small screens, collapse to icon-only */
+@media (max-width: 380px) {
+        .whatsapp-float span {
+                display: none;
+        }
+        .whatsapp-float {
+                padding: 14px;
+                border-radius: 50%;
+        }
 }
 
 /* Landing Page Components */
@@ -622,25 +641,6 @@ select:focus {
 .sidebar-categorias .filter-btn.active {
         background: var(--primary-blue);
         color: white !important;
-}
-
-.form-row {
-        grid-template-columns: 1fr;
-}
-
-/* Touch targets and cards */
-.service-card,
-.product-card {
-        padding: 30px !important;
-        margin-bottom: 20px;
-}
-
-.grid-auto {
-        grid-template-columns: 1fr;
-}
-
-.brands-grid {
-        grid-template-columns: repeat(2, 1fr);
 }
 
 /* Contact Page Styles */
