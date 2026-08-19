@@ -8,27 +8,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ---- Máscara de Telefone ----
     const phoneInput = document.getElementById("input-telefone");
-    phoneInput.addEventListener("input", function (e) {
-        let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
-        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
-    });
+    if (phoneInput) {
+        phoneInput.addEventListener("input", function (e) {
+            let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
+            e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+        });
+    }
 
     // ---- CEP Autocompletar (ViaCEP) ----
     const cepInput = document.getElementById("input-cep");
-    cepInput.addEventListener("blur", function (e) {
-        let cep = e.target.value.replace(/\D/g, '');
-        if (cep.length === 8) {
-            fetch(`https://viacep.com.br/ws/${cep}/json/`)
-                .then(res => res.json())
-                .then(data => {
-                    if (!data.erro) {
-                        document.getElementById("input-rua").value = data.logradouro;
-                        document.getElementById("input-bairro").value = data.bairro;
-                        document.getElementById("input-cidade").value = data.localidade;
-                    }
-                });
-        }
-    });
+    if (cepInput) {
+        cepInput.addEventListener("blur", function (e) {
+            let cep = e.target.value.replace(/\D/g, '');
+            if (cep.length === 8) {
+                fetch(`https://viacep.com.br/ws/${cep}/json/`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (!data.erro) {
+                            document.getElementById("input-rua").value = data.logradouro || '';
+                            document.getElementById("input-bairro").value = data.bairro || '';
+                            document.getElementById("input-cidade").value = data.localidade || '';
+                        }
+                    });
+            }
+        });
+    }
 
     // ---- Toggle PF / PJ ----
     typeBtns.forEach(btn => {
@@ -52,60 +56,70 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // ---- Envio do Formulário (WhatsApp + localStorage) ----
-    cadastroForm.addEventListener("submit", function (e) {
-        e.preventDefault();
+    if (cadastroForm) {
+        cadastroForm.addEventListener("submit", function (e) {
+            e.preventDefault();
 
-        const tipo = tipoCadastroInput.value;
-        const nome = document.getElementById("input-nome").value;
-        const email = document.getElementById("input-email").value;
-        const tel = document.getElementById("input-telefone").value;
-        const doc = docInput.value;
-        const cep = document.getElementById("input-cep").value;
-        const rua = document.getElementById("input-rua").value;
-        const num = document.getElementById("input-numero").value;
-        const bairro = document.getElementById("input-bairro").value;
-        const cidade = document.getElementById("input-cidade").value;
-        const interesse = document.getElementById("input-interesse").value;
+            const tipo = tipoCadastroInput.value;
+            const nome = document.getElementById("input-nome").value.trim();
+            const email = document.getElementById("input-email").value.trim();
+            const tel = document.getElementById("input-telefone").value.trim();
+            const doc = docInput.value.trim();
+            const cep = document.getElementById("input-cep").value.trim();
+            const rua = document.getElementById("input-rua").value.trim();
+            const num = document.getElementById("input-numero").value.trim();
+            const bairro = document.getElementById("input-bairro").value.trim();
+            const cidade = document.getElementById("input-cidade").value.trim();
+            const interesse = document.getElementById("input-interesse").value;
 
-        // ===== SALVAR NO LOCALSTORAGE =====
-        const lead = {
-            id: Date.now(),
-            origem: "cadastro",
-            tipo: tipo,
-            nome: nome,
-            documento: doc,
-            email: email,
-            telefone: tel,
-            endereco: `${rua}, ${num} - ${bairro}, ${cidade} (CEP: ${cep})`,
-            interesse: interesse,
-            status: "novo",
-            data: new Date().toISOString()
-        };
+            // ===== SALVAR NO LOCALSTORAGE =====
+            const lead = {
+                id: Date.now(),
+                origem: "cadastro",
+                tipo: tipo,
+                nome: nome,
+                documento: doc,
+                email: email,
+                telefone: tel,
+                endereco: `${rua}, ${num} - ${bairro}, ${cidade} (CEP: ${cep})`,
+                interesse: interesse,
+                status: "novo",
+                data: new Date().toISOString()
+            };
 
-        const leads = JSON.parse(localStorage.getItem("artesdec_leads") || "[]");
-        leads.unshift(lead);
-        localStorage.setItem("artesdec_leads", JSON.stringify(leads));
-        // ==================================
+            const leads = JSON.parse(localStorage.getItem("artesdec_leads") || "[]");
+            leads.unshift(lead);
+            localStorage.setItem("artesdec_leads", JSON.stringify(leads));
+            // ==================================
 
-        // ---- Mensagem WhatsApp ----
-        let message = "";
-        if (tipo === "PJ") {
-            message += `*🚨 NOVO CADASTRO PJ (CORPORATIVO)*\n`;
-            message += `_Este cadastro precisa ser analisado para liberação da tabela corporativa._\n\n`;
-        } else {
-            message += `*📝 NOVO CADASTRO PF*\n\n`;
-        }
-        message += `*Nome/Empresa:* ${nome}\n`;
-        message += `*${tipo === "PJ" ? "CNPJ" : "CPF"}:* ${doc}\n`;
-        message += `*E-mail:* ${email}\n`;
-        message += `*Telefone:* ${tel}\n\n`;
-        message += `*Endereço:* ${rua}, ${num} - ${bairro}, ${cidade} (CEP: ${cep})\n`;
-        message += `*Principal Interesse:* ${interesse}\n`;
+            // ---- Mensagem WhatsApp Estilo Orçamento ----
+            let message = "";
+            if (tipo === "PJ") {
+                message += `Olá! Sou da empresa *${nome}* e acabei de realizar o cadastro no site da Artes & Decorações.\n\n`;
+                message += `📋 *DADOS DO CADASTRO EMPRESARIAL (PJ)*:\n`;
+                message += `• *Razão Social / Empresa:* ${nome}\n`;
+                message += `• *CNPJ:* ${doc}\n`;
+                message += `• *E-mail:* ${email}\n`;
+                message += `• *Telefone/WhatsApp:* ${tel}\n`;
+                message += `• *Endereço de Faturamento/Obra:* ${rua}, ${num} - ${bairro}, ${cidade} (CEP: ${cep})\n`;
+                message += `• *Principal Interesse:* ${interesse}\n\n`;
+                message += `_Gostaria de atendimento e informações sobre a tabela corporativa._`;
+            } else {
+                message += `Olá! Me chamo *${nome}* e acabei de realizar meu cadastro no site da Artes & Decorações.\n\n`;
+                message += `📋 *DADOS DO CADASTRO (Pessoa Física)*:\n`;
+                message += `• *Nome:* ${nome}\n`;
+                message += `• *CPF:* ${doc}\n`;
+                message += `• *E-mail:* ${email}\n`;
+                message += `• *Telefone/WhatsApp:* ${tel}\n`;
+                message += `• *Endereço:* ${rua}, ${num} - ${bairro}, ${cidade} (CEP: ${cep})\n`;
+                message += `• *Principal Interesse:* ${interesse}\n\n`;
+                message += `_Gostaria de solicitar um orçamento._`;
+            }
 
-        const encodedMessage = encodeURIComponent(message);
-        const waLink = `https://wa.me/5511999201062?text=${encodedMessage}`;
+            const encodedMessage = encodeURIComponent(message);
+            const waLink = `https://wa.me/5511999201062?text=${encodedMessage}`;
 
-        alert(`Cadastro salvo! Você será redirecionado para enviar os dados no nosso WhatsApp.`);
-        window.open(waLink, '_blank');
-    });
+            window.open(waLink, '_blank');
+        });
+    }
 });
