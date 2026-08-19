@@ -53,10 +53,16 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 8px 8px 8px 20px;
+            padding: 6px 6px 6px 20px;
             max-width: 560px;
             margin-top: 35px;
             box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+            border: 2px solid transparent;
+            transition: border-color 0.3s;
+        }
+
+        .produtos-search-bar:focus-within {
+            border-color: var(--accent-yellow);
         }
 
         .produtos-search-bar i {
@@ -76,18 +82,54 @@
         .produtos-search-bar button {
             background: var(--accent-yellow);
             color: #051426;
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             font-weight: 700;
-            padding: 10px 22px;
+            padding: 10px 24px;
             border: none;
             border-radius: 50px;
             cursor: pointer;
             transition: 0.2s;
             white-space: nowrap;
+            font-family: 'Inter', sans-serif;
         }
 
         .produtos-search-bar button:hover {
             background: #e5b200;
+        }
+
+        .card-cat-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: rgba(14, 41, 84, 0.85);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            backdrop-filter: blur(6px);
+            z-index: 2;
+        }
+
+        .product-card-desc {
+            font-size: 0.82rem;
+            color: #64748b;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .product-variant-preview {
+            font-size: 0.78rem;
+            color: #475569;
+            background: #f1f5f9;
+            padding: 6px 10px;
+            border-radius: 6px;
+            margin-bottom: 14px;
+        }
+
+        .product-variant-preview i {
+            color: var(--primary-blue);
+            margin-right: 4px;
         }
 
         /* ===== CATEGORY TAGS ===== */
@@ -377,8 +419,8 @@
             <p>Distribuição de materiais premium para obra e acabamento. Encontre pisos, forros, drywall, divisórias e muito mais.</p>
             <div class="produtos-search-bar">
                 <i class="fas fa-search"></i>
-                <input type="text" id="product-search" placeholder="Buscar produto, categoria ou marca...">
-                <button type="button"><i class="fas fa-search"></i> Buscar</button>
+                <input type="text" id="product-search" placeholder="Digite para buscar produtos ou materiais...">
+                <button type="button">Buscar</button>
             </div>
         </div>
     </div>
@@ -620,6 +662,7 @@
     </script>
 
     <script src="js/main.js"></script>
+    <script src="js/vitrine-store.js"></script>
     <script src="js/bling.js"></script>
 </body>
 

@@ -1,6 +1,6 @@
 /**
- * Lógica da Página de Detalhes do Produto
- * Carrega os dados do localStorage (Published) baseados no SKU da URL.
+ * LÓGICA DA PÁGINA DE VITRINE / DETALHES DO PRODUTO
+ * Exibe especificações, imagens e botão para orçamento no WhatsApp.
  */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -18,86 +18,111 @@ document.addEventListener("DOMContentLoaded", () => {
 function loadProductDetails(sku) {
     const container = document.getElementById('product-container');
 
-    // 1. Tentar carregar do LocalStorage (Sincronizado com Dashboard)
-    const storedData = localStorage.getItem('financial_data');
     let product = null;
-
-    if (storedData) {
-        const data = JSON.parse(storedData);
-        product = (data.importedProducts || []).find(p => p.sku === sku);
-    }
-
-    // 2. Fallback para demonstração se não encontrar (ou se o storage sumir)
-    if (!product) {
-        // Mock simple products for visual test
-        const mocks = [
-            { sku: 'PISO-001', nome: 'Piso Laminado Durafloor', preco: 89.90, imagem: 'https://images.unsplash.com/photo-1581850518616-bcb8077fa2aa?w=800' },
-            { sku: 'FORRO-002', nome: 'Forro PVC Branco 8mm', preco: 35.00, imagem: 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800' }
-        ];
-        product = mocks.find(m => m.sku === sku);
+    if (typeof getVitrineProductBySku === 'function') {
+        product = getVitrineProductBySku(sku);
+    } else {
+        const raw = localStorage.getItem("artesdec_produtos");
+        const products = raw ? JSON.parse(raw) : [];
+        product = products.find(p => p.sku === sku || p.id === sku);
     }
 
     if (!product) {
         container.innerHTML = `
-            <div style="grid-column: 1/-1; text-align: center; padding: 100px;">
-                <i class="fas fa-search fa-3x" style="color: #ef4444;"></i>
-                <h2 style="margin-top: 20px;">Produto não encontrado</h2>
-                <p style="color: #64748b;">O produto com o SKU "${sku}" não está disponível no momento.</p>
-                <a href="produtos.html" class="btn-buy" style="max-width: 200px; margin: 30px auto;">Voltar para Produtos</a>
+            <div style="grid-column: 1/-1; text-align: center; padding: 100px 20px;">
+                <i class="fas fa-search fa-3x" style="color: #cbd5e1; margin-bottom: 20px;"></i>
+                <h2>Produto não encontrado</h2>
+                <p style="color: #64748b; margin-top: 10px;">O material solicitado não está disponível no catálogo atual.</p>
+                <a href="produtos.html" class="btn-buy" style="max-width: 240px; margin: 30px auto; text-decoration: none;">Voltar para o Catálogo</a>
             </div>
         `;
         return;
     }
 
-    // 3. Renderizar Detalhes
     renderDetails(product);
 }
 
 function renderDetails(p) {
     const container = document.getElementById('product-container');
-    const preco = p.preco.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     const imagem = p.imagem || 'https://via.placeholder.com/800x800?text=Sem+Imagem';
-    const checkoutUrl = `https://seu-checkout.com/cart?product=${p.sku}`; // URL base do checkout
+    const catNome = p.categoriaNome || p.categoria || 'Materiais';
+
+    // Render variant selectors HTML
+    let variantsSelectorsHtml = '';
+    if (p.variantes && p.variantes.length > 0) {
+        p.variantes.forEach((v, index) => {
+            const options = (v.valores || []).map(val => `<option value="${val}">${val}</option>`).join('');
+            variantsSelectorsHtml += `
+                <div class="variant-select-group" style="margin-bottom: 18px;">
+                    <label style="display: block; font-size: 0.88rem; font-weight: 700; color: #334155; margin-bottom: 6px;">
+                        ${v.nome}:
+                    </label>
+                    <select class="variant-input" data-varname="${v.nome}" style="width: 100%; padding: 12px 14px; border: 2px solid #e2e8f0; border-radius: 10px; font-size: 0.95rem; background: white; outline: none;">
+                        ${options}
+                    </select>
+                </div>
+            `;
+        });
+    }
 
     container.innerHTML = `
         <div class="product-gallery">
             <img src="${imagem}" alt="${p.nome}" id="main-img">
         </div>
         <div class="product-info">
-            <div class="sku-badge">SKU: ${p.sku}</div>
+            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
+                <span class="cat-badge" style="background: #0E2954; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; text-transform: uppercase;">${catNome}</span>
+                ${p.sku ? `<span class="sku-badge" style="margin-bottom: 0;">SKU: ${p.sku}</span>` : ''}
+            </div>
             <h1>${p.nome}</h1>
-            <div class="product-price">${preco} <small style="font-size: 1rem; color: #94a3b8; font-weight: 400;">/unid</small></div>
             
-            <div class="product-description">
-                Este produto é de alta qualidade e faz parte do catálogo premium da Artes e Decorações. 
-                Ideal para reformas e construções, garantindo durabilidade e um acabamento impecável para o seu ambiente.
+            <div class="product-description" style="margin-top: 20px;">
+                ${p.descricao || 'Material de alta performance fornecido com padrão de qualidade e durabilidade garantida.'}
             </div>
 
-            <div class="buy-box">
-                <div style="margin-bottom: 20px; color: #15803d; font-weight: 600;">
-                    <i class="fas fa-check-circle"></i> Disponível para entrega imediata
-                </div>
-                <a href="${checkoutUrl}" class="btn-buy">
-                    <i class="fas fa-shopping-cart"></i> COMPRAR AGORA
-                </a>
-                <div style="margin-top: 15px; text-align: center; font-size: 0.85rem; color: #64748b;">
-                    <i class="fas fa-lock"></i> Compra 100% Segura
+            <div class="buy-box" style="margin-top: 30px;">
+                <h3 style="font-size: 1.1rem; color: #0E2954; margin-bottom: 15px;">Solicitar Orçamento Personalizado</h3>
+                
+                ${variantsSelectorsHtml}
+
+                <button id="btn-request-wpp" class="btn-buy" style="background: #25D366; border: none; cursor: pointer; width: 100%;">
+                    <i class="fab fa-whatsapp" style="font-size: 1.4rem;"></i> Solicitar Orçamento no WhatsApp
+                </button>
+                <div style="margin-top: 14px; text-align: center; font-size: 0.82rem; color: #64748b;">
+                    <i class="fas fa-truck"></i> Entregamos em Mogi das Cruzes e toda região
                 </div>
             </div>
 
-            <div style="margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div style="background: white; padding: 15px; border-radius: 12px; border: 1px solid #eee; display: flex; align-items: center; gap: 12px; font-size: 0.9rem;">
-                    <i class="fas fa-truck" style="color: var(--primary-blue);"></i>
-                    Frete sob consulta
+            <div style="margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div style="background: white; padding: 15px; border-radius: 12px; border: 1px solid #eee; display: flex; align-items: center; gap: 12px; font-size: 0.88rem;">
+                    <i class="fas fa-certificate" style="color: #0E2954; font-size: 1.2rem;"></i>
+                    Garantia e Qualidade
                 </div>
-                <div style="background: white; padding: 15px; border-radius: 12px; border: 1px solid #eee; display: flex; align-items: center; gap: 12px; font-size: 0.9rem;">
-                    <i class="fas fa-shield-alt" style="color: var(--primary-blue);"></i>
-                    Garantia de Fábrica
+                <div style="background: white; padding: 15px; border-radius: 12px; border: 1px solid #eee; display: flex; align-items: center; gap: 12px; font-size: 0.88rem;">
+                    <i class="fas fa-headset" style="color: #0E2954; font-size: 1.2rem;"></i>
+                    Suporte Técnico 40 Anos
                 </div>
             </div>
         </div>
     `;
 
-    // Atualizar o título da página
-    document.title = `${p.nome} | Artes e Decorações`;
+    document.title = `${p.nome} | Vitrine Artes e Decorações`;
+
+    // WhatsApp Click Handler
+    document.getElementById("btn-request-wpp").addEventListener("click", () => {
+        const variantInputs = document.querySelectorAll(".variant-input");
+        let selectedVariants = [];
+        variantInputs.forEach(input => {
+            selectedVariants.push(`${input.dataset.varname}: ${input.value}`);
+        });
+
+        let msg = `Olá! Gostaria de solicitar um orçamento para o material *${p.nome}*.\n`;
+        if (selectedVariants.length > 0) {
+            msg += `*Opções Selecionadas:* ${selectedVariants.join(" | ")}\n`;
+        }
+        msg += `\n_Vim pelo catálogo visual do site._`;
+
+        const encoded = encodeURIComponent(msg);
+        window.open(`https://wa.me/5511999201062?text=${encoded}`, '_blank');
+    });
 }
