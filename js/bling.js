@@ -1,14 +1,19 @@
 /**
  * ARTES E DECORAÇÕES — VITRINE VISUAL DE PRODUTOS
- * Carrega e exibe os produtos cadastrados no painel administrativo.
+ * Carrega e exibe os produtos e categorias dinâmicas do painel administrativo.
  */
 
 document.addEventListener("DOMContentLoaded", () => {
+    renderCategoryFilterTags();
     loadProducts();
 });
 
-function getCategoryName(cat) {
-    const map = {
+function getCategoryName(catId) {
+    let categories = typeof getVitrineCategories === 'function' ? getVitrineCategories() : [];
+    const found = categories.find(c => c.id === catId);
+    if (found) return found.nome;
+    
+    const fallbackMap = {
         'pisos': 'Pisos',
         'forros': 'Forros',
         'drywall': 'Drywall',
@@ -17,7 +22,33 @@ function getCategoryName(cat) {
         'papel-parede': 'Papel de Parede',
         'ferramentas': 'Ferramentas'
     };
-    return map[cat] || 'Geral';
+    return fallbackMap[catId] || catId;
+}
+
+function renderCategoryFilterTags() {
+    const container = document.querySelector(".category-tags");
+    if (!container) return;
+
+    let categories = typeof getVitrineCategories === 'function' ? getVitrineCategories() : [];
+    if (!categories || categories.length === 0) return;
+
+    let html = `<a href="#" class="cat-tag active" data-category="all"><i class="fas fa-th-large"></i> Todos</a>`;
+    categories.forEach(cat => {
+        const emoji = cat.emoji || '📦';
+        html += `<a href="#" class="cat-tag" data-category="${cat.id}">${emoji} ${cat.nome}</a>`;
+    });
+
+    container.innerHTML = html;
+
+    // Attach click events for filtering
+    container.querySelectorAll('.cat-tag').forEach(tag => {
+        tag.addEventListener('click', (e) => {
+            e.preventDefault();
+            container.querySelectorAll('.cat-tag').forEach(t => t.classList.remove('active'));
+            tag.classList.add('active');
+            loadProducts();
+        });
+    });
 }
 
 function loadProducts() {
@@ -68,7 +99,7 @@ function renderProducts(products) {
 
         const imagem = p.imagemCapa || p.imagem || 'https://via.placeholder.com/400x300?text=Sem+Imagem';
         const nome = p.nome || 'Material';
-        const catName = p.categoriaNome || getCategoryName(p.categoria);
+        const catName = getCategoryName(p.categoria);
         const desc = p.descricao
             ? (p.descricao.length > 85 ? p.descricao.substring(0, 85) + "..." : p.descricao)
             : 'Material de alta qualidade para obra e acabamento.';

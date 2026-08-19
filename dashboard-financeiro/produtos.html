@@ -200,6 +200,27 @@
             border-color: #F6BA3B;
         }
 
+        .btn-manage-cats {
+            background: rgba(246, 186, 59, 0.15);
+            color: #F6BA3B;
+            border: 1px solid #F6BA3B;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: auto;
+        }
+
+        .btn-manage-cats:hover {
+            background: #F6BA3B;
+            color: #0E2954;
+        }
+
         /* ===== MODAL STYLES ===== */
         .modal-overlay {
             display: none;
@@ -310,7 +331,6 @@
             box-shadow: 0 0 0 3px rgba(246, 186, 59, 0.15);
         }
 
-        /* Upload Button Component */
         .btn-upload-file {
             display: inline-flex;
             align-items: center;
@@ -335,7 +355,6 @@
             color: #0E2954;
         }
 
-        /* Image Preview Box */
         .img-preview-box {
             width: 100%;
             height: 120px;
@@ -355,20 +374,12 @@
             object-fit: cover;
         }
 
-        /* Options list in modal */
         .option-row-item {
             background: rgba(5, 20, 38, 0.6);
             padding: 14px;
             border-radius: 12px;
             margin-bottom: 12px;
             border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .option-row-inputs {
-            display: grid;
-            grid-template-columns: 1fr 1fr 40px;
-            gap: 10px;
-            align-items: flex-start;
         }
 
         .btn-add-option-row {
@@ -415,6 +426,25 @@
             width: auto;
             text-transform: none;
             letter-spacing: normal;
+        }
+
+        /* Category Item Card in Modal */
+        .cat-item-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(5, 20, 38, 0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+        }
+
+        .cat-item-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -465,9 +495,14 @@
                     <h1>Vitrine de Produtos</h1>
                     <div class="text-muted">Gerencie os materiais, fotos de capa e variações exibidas no site.</div>
                 </div>
-                <button type="button" class="btn-primary" onclick="openAddModal()" style="width: auto; padding: 12px 24px;">
-                    <i class="fas fa-plus"></i> Novo Material
-                </button>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="btn-manage-cats" onclick="openCategoriesModal()">
+                        <i class="fas fa-cog"></i> Gerenciar Categorias
+                    </button>
+                    <button type="button" class="btn-primary" onclick="openAddModal()" style="width: auto; padding: 12px 24px;">
+                        <i class="fas fa-plus"></i> Novo Material
+                    </button>
+                </div>
             </header>
 
             <!-- Filters & Search Bar -->
@@ -476,14 +511,8 @@
                     <i class="fas fa-search"></i>
                     <input type="text" id="admin-search" placeholder="Buscar material por nome ou código SKU...">
                 </div>
-                <div class="admin-cat-filters">
-                    <button type="button" class="admin-cat-btn active" data-cat="all">Todos</button>
-                    <button type="button" class="admin-cat-btn" data-cat="pisos">🪵 Pisos</button>
-                    <button type="button" class="admin-cat-btn" data-cat="forros">🏗️ Forros</button>
-                    <button type="button" class="admin-cat-btn" data-cat="drywall">🧱 Drywall</button>
-                    <button type="button" class="admin-cat-btn" data-cat="divisorias">🚪 Divisórias</button>
-                    <button type="button" class="admin-cat-btn" data-cat="persianas">🪟 Persianas</button>
-                    <button type="button" class="admin-cat-btn" data-cat="papel-parede">🎨 Papel Parede</button>
+                <div class="admin-cat-filters" id="admin-cat-filters">
+                    <!-- Dynamic Category Pills Injected via JS -->
                 </div>
             </div>
 
@@ -494,7 +523,7 @@
         </main>
     </div>
 
-    <!-- Modal Form (Add / Edit) -->
+    <!-- Modal Form (Add / Edit Product) -->
     <div class="modal-overlay" id="product-modal">
         <div class="modal-box">
             <div class="modal-header">
@@ -518,13 +547,7 @@
                     <div class="form-group">
                         <label>Categoria *</label>
                         <select id="prod-categoria" required>
-                            <option value="pisos">Pisos (Laminados / Vinílicos)</option>
-                            <option value="forros">Forros (PVC / Modular)</option>
-                            <option value="drywall">Drywall (Chapas / Perfis)</option>
-                            <option value="divisorias">Divisórias (Eucatex / PVC)</option>
-                            <option value="persianas">Persianas & Cortinas</option>
-                            <option value="papel-parede">Papel de Parede</option>
-                            <option value="ferramentas">Ferramentas & Acessórios</option>
+                            <!-- Dynamically populated -->
                         </select>
                     </div>
 
@@ -572,13 +595,50 @@
         </div>
     </div>
 
+    <!-- Modal Form (Categories Manager) -->
+    <div class="modal-overlay" id="categories-modal">
+        <div class="modal-box" style="max-width: 550px;">
+            <div class="modal-header">
+                <h3>Gerenciar Categorias do Catálogo</h3>
+                <button type="button" class="modal-close" onclick="closeCategoriesModal()"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <div class="modal-section-title">Categorias Cadastradas</div>
+            <div id="cats-list-container" style="max-height: 220px; overflow-y: auto; margin-bottom: 20px;">
+                <!-- Category items injected via JS -->
+            </div>
+
+            <div class="modal-section-title" id="cat-form-title">Adicionar / Editar Categoria</div>
+            <form id="cat-form" onsubmit="saveCategorySubmit(event)">
+                <input type="hidden" id="cat-edit-id">
+                
+                <div class="form-grid" style="grid-template-columns: 80px 1fr;">
+                    <div class="form-group">
+                        <label>Emoji *</label>
+                        <input type="text" id="cat-emoji" required placeholder="Ex: 🪵" style="text-align: center; font-size: 1.2rem;">
+                    </div>
+                    <div class="form-group">
+                        <label>Nome da Categoria *</label>
+                        <input type="text" id="cat-nome" required placeholder="Ex: Iluminação & Elétrica">
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+                    <button type="button" class="btn-modal-cancel" onclick="resetCatForm()">Limpar Form</button>
+                    <button type="submit" class="btn-modal-submit">Salvar Categoria</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="/js/vitrine-store.js"></script>
     <script>
         let currentProducts = getVitrineProducts();
+        let currentCategories = getVitrineCategories();
         let activeCatFilter = "all";
         let searchFilter = "";
 
-        // Image preview sync for main cover image input
+        // Sync Image preview for main cover image input
         document.getElementById('prod-imagem').addEventListener('input', function() {
             const preview = document.getElementById('main-img-preview');
             preview.src = this.value || 'https://via.placeholder.com/400x200?text=Prévia+da+Foto+de+Capa';
@@ -594,6 +654,37 @@
                 document.getElementById('main-img-preview').src = base64;
             };
             reader.readAsDataURL(file);
+        }
+
+        // Render Dynamic Category Pills Toolbar & Select Dropdown
+        function renderCategoryControls() {
+            currentCategories = getVitrineCategories();
+            
+            // 1. Toolbar Filter Pills
+            const pillsContainer = document.getElementById("admin-cat-filters");
+            let pillsHtml = `<button type="button" class="admin-cat-btn ${activeCatFilter === 'all' ? 'active' : ''}" data-cat="all">Todos</button>`;
+            
+            currentCategories.forEach(c => {
+                const emoji = c.emoji || '📦';
+                const isActive = activeCatFilter === c.id ? 'active' : '';
+                pillsHtml += `<button type="button" class="admin-cat-btn ${isActive}" data-cat="${c.id}">${emoji} ${c.nome}</button>`;
+            });
+
+            pillsContainer.innerHTML = pillsHtml;
+
+            // Re-attach click events to filter pills
+            pillsContainer.querySelectorAll('.admin-cat-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    pillsContainer.querySelectorAll('.admin-cat-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    activeCatFilter = btn.dataset.cat;
+                    renderAdminProducts();
+                });
+            });
+
+            // 2. Select Dropdown in Product Form
+            const select = document.getElementById("prod-categoria");
+            select.innerHTML = currentCategories.map(c => `<option value="${c.id}">${c.emoji || ''} ${c.nome}</option>`).join('');
         }
 
         function renderAdminProducts() {
@@ -618,12 +709,8 @@
             }
 
             grid.innerHTML = filtered.map(p => {
-                const catMap = {
-                    pisos: 'Pisos', forros: 'Forros', drywall: 'Drywall',
-                    divisorias: 'Divisórias', persianas: 'Persianas',
-                    'papel-parede': 'Papel de Parede', ferramentas: 'Ferramentas'
-                };
-                const catName = catMap[p.categoria] || p.categoria;
+                const catObj = currentCategories.find(c => c.id === p.categoria);
+                const catName = catObj ? catObj.nome : (p.categoriaNome || p.categoria);
                 const img = p.imagemCapa || p.imagem || 'https://via.placeholder.com/400x300?text=Sem+Imagem';
                 const optsCount = p.opcoes ? p.opcoes.length : 0;
 
@@ -652,16 +739,6 @@
                 </div>`;
             }).join('');
         }
-
-        // Filter Tags Logic
-        document.querySelectorAll('.admin-cat-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.admin-cat-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                activeCatFilter = btn.dataset.cat;
-                renderAdminProducts();
-            });
-        });
 
         document.getElementById('admin-search').addEventListener('input', e => {
             searchFilter = e.target.value;
@@ -705,7 +782,6 @@
             `;
             container.appendChild(div);
 
-            // Sync URL input with preview image
             const optImgInput = div.querySelector('.opt-img');
             const optPreview = div.querySelector('.opt-preview-img');
             optImgInput.addEventListener('input', function() {
@@ -728,7 +804,7 @@
             reader.readAsDataURL(file);
         }
 
-        // Modal Logic
+        // Product Modal Logic
         function openAddModal() {
             document.getElementById('modal-title').textContent = "Adicionar Novo Material à Vitrine";
             document.getElementById('product-form').reset();
@@ -736,9 +812,7 @@
             document.getElementById('main-img-preview').src = "https://via.placeholder.com/400x200?text=Prévia+da+Foto+de+Capa";
             document.getElementById('options-container').innerHTML = "";
             
-            // Add 1 default option row
             addOptionRow();
-            
             document.getElementById('product-modal').classList.add('active');
         }
 
@@ -750,7 +824,7 @@
             document.getElementById('prod-id').value = p.id;
             document.getElementById('prod-nome').value = p.nome || '';
             document.getElementById('prod-sku').value = p.sku || '';
-            document.getElementById('prod-categoria').value = p.categoria || 'pisos';
+            document.getElementById('prod-categoria').value = p.categoria || (currentCategories[0] ? currentCategories[0].id : 'pisos');
             
             const coverImg = p.imagemCapa || p.imagem || '';
             document.getElementById('prod-imagem').value = coverImg;
@@ -782,7 +856,6 @@
             const imagemCapa = document.getElementById('prod-imagem').value.trim();
             const descricao = document.getElementById('prod-descricao').value.trim();
 
-            // Collect options
             const optionRows = document.querySelectorAll('.option-row-item');
             let opcoes = [];
             optionRows.forEach(row => {
@@ -796,18 +869,14 @@
                 }
             });
 
-            const catMap = {
-                pisos: 'Pisos', forros: 'Forros', drywall: 'Drywall',
-                divisorias: 'Divisórias', persianas: 'Persianas',
-                'papel-parede': 'Papel de Parede', ferramentas: 'Ferramentas'
-            };
+            const catObj = currentCategories.find(c => c.id === categoria);
 
             const newProd = {
                 id: id,
                 sku: sku,
                 nome: nome,
                 categoria: categoria,
-                categoriaNome: catMap[categoria] || categoria,
+                categoriaNome: catObj ? catObj.nome : categoria,
                 descricao: descricao,
                 imagemCapa: imagemCapa,
                 opcoes: opcoes
@@ -832,6 +901,105 @@
             renderAdminProducts();
         }
 
+        /* ===== CATEGORIES MANAGER MODAL LOGIC ===== */
+        function openCategoriesModal() {
+            renderCategoriesListInModal();
+            resetCatForm();
+            document.getElementById('categories-modal').classList.add('active');
+        }
+
+        function closeCategoriesModal() {
+            document.getElementById('categories-modal').classList.remove('active');
+        }
+
+        function renderCategoriesListInModal() {
+            currentCategories = getVitrineCategories();
+            const list = document.getElementById("cats-list-container");
+
+            if (currentCategories.length === 0) {
+                list.innerHTML = `<p style="font-size:0.85rem; color:#94a3b8;">Nenhuma categoria cadastrada.</p>`;
+                return;
+            }
+
+            list.innerHTML = currentCategories.map(c => `
+                <div class="cat-item-card">
+                    <div class="cat-item-info">
+                        <span style="font-size: 1.2rem;">${c.emoji || '📦'}</span>
+                        <span>${c.nome}</span>
+                        <span style="font-size:0.7rem; color:#94a3b8; font-weight:normal;">(ID: ${c.id})</span>
+                    </div>
+                    <div style="display:flex; gap:6px;">
+                        <button type="button" onclick="editCategory('${c.id}')" style="background:rgba(255,255,255,0.1); color:white; border:none; border-radius:6px; width:30px; height:30px; cursor:pointer;" title="Editar"><i class="fas fa-edit"></i></button>
+                        <button type="button" onclick="deleteCategory('${c.id}')" style="background:#ef4444; color:white; border:none; border-radius:6px; width:30px; height:30px; cursor:pointer;" title="Excluir"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editCategory(id) {
+            const c = currentCategories.find(item => item.id === id);
+            if (!c) return;
+
+            document.getElementById('cat-edit-id').value = c.id;
+            document.getElementById('cat-emoji').value = c.emoji || '';
+            document.getElementById('cat-nome').value = c.nome || '';
+            document.getElementById('cat-form-title').textContent = "Editar Categoria: " + c.nome;
+        }
+
+        function resetCatForm() {
+            document.getElementById('cat-form').reset();
+            document.getElementById('cat-edit-id').value = "";
+            document.getElementById('cat-form-title').textContent = "Adicionar / Editar Categoria";
+        }
+
+        function saveCategorySubmit(e) {
+            e.preventDefault();
+            const editId = document.getElementById('cat-edit-id').value;
+            const emoji = document.getElementById('cat-emoji').value.trim() || '📦';
+            const nome = document.getElementById('cat-nome').value.trim();
+
+            if (!nome) return;
+
+            const slugId = editId || nome.toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9]/g, '-')
+                .replace(/-+/g, '-');
+
+            const newCat = { id: slugId, nome: nome, emoji: emoji };
+
+            const existingIndex = currentCategories.findIndex(c => c.id === slugId);
+            if (existingIndex >= 0) {
+                currentCategories[existingIndex] = newCat;
+            } else {
+                currentCategories.push(newCat);
+            }
+
+            saveVitrineCategories(currentCategories);
+            renderCategoriesListInModal();
+            resetCatForm();
+            
+            // Re-render controls and main grid
+            renderCategoryControls();
+            renderAdminProducts();
+        }
+
+        function deleteCategory(id) {
+            if (currentCategories.length <= 1) {
+                alert("Você precisa ter pelo menos 1 categoria cadastrada.");
+                return;
+            }
+            if (!confirm("Tem certeza que deseja excluir esta categoria? Os produtos associados continuarão existindo.")) return;
+
+            currentCategories = currentCategories.filter(c => c.id !== id);
+            saveVitrineCategories(currentCategories);
+            renderCategoriesListInModal();
+            
+            renderCategoryControls();
+            renderAdminProducts();
+        }
+
+        // Initialize
+        renderCategoryControls();
         renderAdminProducts();
     </script>
 </body>

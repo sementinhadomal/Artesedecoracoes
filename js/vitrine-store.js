@@ -1,7 +1,39 @@
 /**
  * VITRINE STORE — Artes e Decorações
- * Gerenciador centralizado de produtos e variações com suporte a imagem por opção.
+ * Gerenciador centralizado de produtos, variações e categorias dinâmicas.
  */
+
+const DEFAULT_VITRINE_CATEGORIES = [
+    { id: "pisos", nome: "Pisos", emoji: "🪵" },
+    { id: "forros", nome: "Forros", emoji: "🏗️" },
+    { id: "drywall", nome: "Drywall", emoji: "🧱" },
+    { id: "divisorias", nome: "Divisórias", emoji: "🚪" },
+    { id: "persianas", nome: "Persianas", emoji: "🪟" },
+    { id: "papel-parede", nome: "Papel de Parede", emoji: "🎨" },
+    { id: "ferramentas", nome: "Ferramentas", emoji: "🛠️" }
+];
+
+function getVitrineCategories() {
+    const raw = localStorage.getItem("artesdec_categorias");
+    if (!raw) {
+        localStorage.setItem("artesdec_categorias", JSON.stringify(DEFAULT_VITRINE_CATEGORIES));
+        return DEFAULT_VITRINE_CATEGORIES;
+    }
+    try {
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed) || parsed.length === 0) {
+            localStorage.setItem("artesdec_categorias", JSON.stringify(DEFAULT_VITRINE_CATEGORIES));
+            return DEFAULT_VITRINE_CATEGORIES;
+        }
+        return parsed;
+    } catch (e) {
+        return DEFAULT_VITRINE_CATEGORIES;
+    }
+}
+
+function saveVitrineCategories(cats) {
+    localStorage.setItem("artesdec_categorias", JSON.stringify(cats));
+}
 
 const DEFAULT_VITRINE_PRODUCTS = [
     {
@@ -9,7 +41,7 @@ const DEFAULT_VITRINE_PRODUCTS = [
         sku: "PISO-LAM-01",
         nome: "Piso Laminado Durafloor Unique",
         categoria: "pisos",
-        categoriaNome: "Pisos Laminados",
+        categoriaNome: "Pisos",
         descricao: "Piso laminado de alta resistência a riscos e impactos, perfeito para ambientes residenciais e comerciais. Possui acabamento sofisticado com padrão amadeirado natural e tecnologia de instalação rápida por encaixe sem cola.",
         imagemCapa: "img/services/piso-laminado.jpg",
         opcoes: [
@@ -33,7 +65,7 @@ const DEFAULT_VITRINE_PRODUCTS = [
         sku: "PISO-VIN-02",
         nome: "Piso Vinílico LVT Click",
         categoria: "pisos",
-        categoriaNome: "Pisos Vinílicos",
+        categoriaNome: "Pisos",
         descricao: "Piso vinílico 100% impermeável com textura agradável e excelente isolamento acústico. Ideal para cozinhas, salas, quartos e escritórios. Fácil limpeza e resistente à umidade.",
         imagemCapa: "https://images.unsplash.com/photo-1581850518616-bcb8077fa2aa?auto=format&fit=crop&w=800&q=80",
         opcoes: [
