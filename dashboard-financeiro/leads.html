@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes e Leads | Artes e Decorações</title>
+    <link rel="stylesheet" href="/dashboard-financeiro/style.css">
+    <link rel="stylesheet" href="/dashboard-financeiro/leads.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="/dashboard-financeiro/js/auth-check.js"></script>
+</head>
+
+<body>
+    <div class="dashboard-wrapper">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <img src="/img/logo.png" alt="Artes e Decorações Logo">
+                <h2>Financeiro</h2>
+            </div>
+
+            <nav class="nav-section">
+                <div class="nav-section-title">Geral</div>
+                <a href="/dashboard-financeiro/index.html" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Página Principal</span>
+                </a>
+            </nav>
+
+            <nav class="nav-section">
+                <div class="nav-section-title">Canais de Venda</div>
+                <a href="/dashboard-financeiro/index.html" class="nav-item">
+                    <i class="fas fa-store"></i>
+                    <span>Frente de Balcão</span>
+                </a>
+                <a href="/dashboard-financeiro/index.html" class="nav-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Supermercado Shibata</span>
+                </a>
+                <a href="/dashboard-financeiro/index.html" class="nav-item">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>Shopee</span>
+                </a>
+                <a href="/dashboard-financeiro/index.html" class="nav-item">
+                    <i class="fas fa-box"></i>
+                    <span>Mercado Livre</span>
+                </a>
+            </nav>
+
+            <nav class="nav-section">
+                <div class="nav-section-title">Clientes</div>
+                <a href="/dashboard-financeiro/leads.html" class="nav-item active">
+                    <i class="fas fa-users"></i>
+                    <span>Cadastros e Contatos</span>
+                    <span id="leads-badge" class="leads-badge" style="display:none;"></span>
+                </a>
+            </nav>
+
+            <nav class="nav-section">
+                <div class="nav-section-title">Integrações</div>
+                <a href="/dashboard-financeiro/index.html" class="nav-item">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Bling ERP</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-container">
+            <header>
+                <h1>Clientes e Leads</h1>
+                <div id="date-display" class="text-muted"></div>
+            </header>
+
+            <!-- Stats Bar -->
+            <div class="leads-stats">
+                <div class="glass-card lead-stat-card">
+                    <div class="lead-stat-icon" style="background: rgba(37,211,102,0.15); color: #25D366;">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div>
+                        <div class="lead-stat-value" id="stat-novos">0</div>
+                        <div class="lead-stat-label">Novos</div>
+                    </div>
+                </div>
+                <div class="glass-card lead-stat-card">
+                    <div class="lead-stat-icon" style="background: rgba(14,41,84,0.1); color: #0E2954;">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div>
+                        <div class="lead-stat-value" id="stat-total">0</div>
+                        <div class="lead-stat-label">Total de Leads</div>
+                    </div>
+                </div>
+                <div class="glass-card lead-stat-card">
+                    <div class="lead-stat-icon" style="background: rgba(246,186,59,0.15); color: #c9920a;">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <div>
+                        <div class="lead-stat-value" id="stat-pj">0</div>
+                        <div class="lead-stat-label">Empresas (PJ)</div>
+                    </div>
+                </div>
+                <div class="glass-card lead-stat-card">
+                    <div class="lead-stat-icon" style="background: rgba(31,110,140,0.12); color: #1F6E8C;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <div class="lead-stat-value" id="stat-pf">0</div>
+                        <div class="lead-stat-label">Consumidores (PF)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters and Search -->
+            <div class="glass-card leads-toolbar">
+                <div class="leads-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Buscar por nome, e-mail ou telefone...">
+                </div>
+                <div class="leads-filters">
+                    <button class="filter-tag active" data-filter="todos">Todos</button>
+                    <button class="filter-tag" data-filter="novo">🔴 Novos</button>
+                    <button class="filter-tag" data-filter="cadastro">📝 Cadastros</button>
+                    <button class="filter-tag" data-filter="contato">💬 Contatos</button>
+                    <button class="filter-tag" data-filter="PJ">🏢 PJ / B2B</button>
+                </div>
+                <button class="btn-clear-demo" onclick="addDemoData()">
+                    <i class="fas fa-plus"></i> Adicionar Dados Demo
+                </button>
+            </div>
+
+            <!-- Leads Table -->
+            <div class="glass-card leads-table-wrapper">
+                <table class="leads-table" id="leads-table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Nome</th>
+                            <th>Tipo</th>
+                            <th>Interesse / Mensagem</th>
+                            <th>Contato</th>
+                            <th>Data</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leads-tbody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+                <div id="empty-state" class="empty-state" style="display:none;">
+                    <i class="fas fa-inbox"></i>
+                    <h3>Nenhum lead encontrado</h3>
+                    <p>Quando clientes preencherem os formulários de Cadastro ou Contato do site, eles aparecerão aqui.</p>
+                    <button onclick="addDemoData()" class="btn-demo">
+                        <i class="fas fa-flask"></i> Adicionar dados de demonstração
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ==============================
+        // DATE DISPLAY
+        // ==============================
+        document.getElementById("date-display").textContent =
+            new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+
+        // ==============================
+        // LEADS DATA
+        // ==============================
+        let allLeads = JSON.parse(localStorage.getItem("artesdec_leads") || "[]");
+        let activeFilter = "todos";
+        let searchTerm = "";
+
+        function renderStats() {
+            const novos = allLeads.filter(l => l.status === "novo").length;
+            const pj = allLeads.filter(l => l.tipo === "PJ").length;
+            const pf = allLeads.filter(l => l.tipo === "PF").length;
+            document.getElementById("stat-novos").textContent = novos;
+            document.getElementById("stat-total").textContent = allLeads.length;
+            document.getElementById("stat-pj").textContent = pj;
+            document.getElementById("stat-pf").textContent = pf;
+
+            // Badge on nav
+            const badge = document.getElementById("leads-badge");
+            if (novos > 0) {
+                badge.textContent = novos;
+                badge.style.display = "inline-flex";
+            } else {
+                badge.style.display = "none";
+            }
+        }
+
+        function getFilteredLeads() {
+            return allLeads.filter(lead => {
+                const matchFilter =
+                    activeFilter === "todos" ||
+                    (activeFilter === "novo" && lead.status === "novo") ||
+                    (activeFilter === "cadastro" && lead.origem === "cadastro") ||
+                    (activeFilter === "contato" && lead.origem === "contato") ||
+                    (activeFilter === "PJ" && lead.tipo === "PJ");
+
+                const term = searchTerm.toLowerCase();
+                const matchSearch = !term ||
+                    (lead.nome || "").toLowerCase().includes(term) ||
+                    (lead.email || "").toLowerCase().includes(term) ||
+                    (lead.telefone || "").toLowerCase().includes(term);
+
+                return matchFilter && matchSearch;
+            });
+        }
+
+        function formatDate(isoStr) {
+            if (!isoStr) return "—";
+            const d = new Date(isoStr);
+            return d.toLocaleDateString("pt-BR") + " " + d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+        }
+
+        function statusLabel(status) {
+            const map = {
+                novo: '<span class="badge badge-novo">Novo</span>',
+                visualizado: '<span class="badge badge-vis">Visualizado</span>',
+                contatado: '<span class="badge badge-cont">Contatado</span>'
+            };
+            return map[status] || map.novo;
+        }
+
+        function tipoLabel(lead) {
+            if (lead.origem === "contato") return '<span class="tipo-tag tipo-contato">💬 Contato</span>';
+            if (lead.tipo === "PJ") return '<span class="tipo-tag tipo-pj">🏢 PJ / B2B</span>';
+            return '<span class="tipo-tag tipo-pf">👤 PF</span>';
+        }
+
+        function renderTable() {
+            const filtered = getFilteredLeads();
+            const tbody = document.getElementById("leads-tbody");
+            const emptyState = document.getElementById("empty-state");
+            const table = document.getElementById("leads-table");
+
+            if (filtered.length === 0) {
+                table.style.display = "none";
+                emptyState.style.display = "flex";
+                return;
+            }
+
+            table.style.display = "table";
+            emptyState.style.display = "none";
+
+            tbody.innerHTML = filtered.map(lead => {
+                const interesse = lead.mensagem
+                    ? (lead.mensagem.length > 50 ? lead.mensagem.substring(0, 50) + "..." : lead.mensagem)
+                    : (lead.interesse || "—");
+
+                const waMsg = lead.origem === "contato"
+                    ? `Olá ${lead.nome}, vi sua mensagem em nosso site: "${lead.mensagem || ""}". Podemos conversar?`
+                    : `Olá ${lead.nome}, vi seu cadastro em nosso site com interesse em ${lead.interesse || "nossos produtos"}. Podemos conversar?`;
+                const waLink = `https://wa.me/55${(lead.telefone || "").replace(/\D/g, '')}?text=${encodeURIComponent(waMsg)}`;
+
+                return `
+                <tr data-id="${lead.id}" class="${lead.status === 'novo' ? 'row-novo' : ''}">
+                    <td>${statusLabel(lead.status)}</td>
+                    <td>
+                        <div class="lead-name">${lead.nome || "—"}</div>
+                        <div class="lead-email">${lead.email || ""}</div>
+                    </td>
+                    <td>${tipoLabel(lead)}</td>
+                    <td class="lead-interesse">${interesse}</td>
+                    <td>
+                        <div class="lead-tel"><i class="fas fa-phone"></i> ${lead.telefone || "—"}</div>
+                        ${lead.endereco ? `<div class="lead-addr"><i class="fas fa-map-marker-alt"></i> ${lead.endereco}</div>` : ""}
+                    </td>
+                    <td class="lead-date">${formatDate(lead.data)}</td>
+                    <td>
+                        <div class="lead-actions">
+                            <a href="${waLink}" target="_blank" class="btn-action btn-wa" title="Abrir WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                            <button class="btn-action btn-status" title="Marcar como Contatado" onclick="markStatus(${lead.id}, 'contatado')">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn-action btn-view" title="Marcar como Visualizado" onclick="markStatus(${lead.id}, 'visualizado')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn-action btn-delete" title="Excluir" onclick="deleteLead(${lead.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>`;
+            }).join("");
+        }
+
+        function markStatus(id, newStatus) {
+            allLeads = allLeads.map(l => l.id === id ? { ...l, status: newStatus } : l);
+            localStorage.setItem("artesdec_leads", JSON.stringify(allLeads));
+            renderStats();
+            renderTable();
+        }
+
+        function deleteLead(id) {
+            if (!confirm("Excluir este lead?")) return;
+            allLeads = allLeads.filter(l => l.id !== id);
+            localStorage.setItem("artesdec_leads", JSON.stringify(allLeads));
+            renderStats();
+            renderTable();
+        }
+
+        // ==============================
+        // FILTERS
+        // ==============================
+        document.querySelectorAll(".filter-tag").forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.querySelectorAll(".filter-tag").forEach(b => b.classList.remove("active"));
+                btn.classList.add("active");
+                activeFilter = btn.dataset.filter;
+                renderTable();
+            });
+        });
+
+        document.getElementById("search-input").addEventListener("input", e => {
+            searchTerm = e.target.value;
+            renderTable();
+        });
+
+        // ==============================
+        // DEMO DATA
+        // ==============================
+        function addDemoData() {
+            const demos = [
+                { id: Date.now() + 1, origem: "cadastro", tipo: "PJ", nome: "Construtora Silva & Cia", documento: "12.345.678/0001-90", email: "silva@construtora.com", telefone: "(11) 98765-4321", endereco: "Av. Industrial, 500 - Centro, Mogi das Cruzes (CEP: 08700-000)", interesse: "Tabela B2B / Parceria Corporativa", status: "novo", data: new Date(Date.now() - 1000 * 60 * 30).toISOString() },
+                { id: Date.now() + 2, origem: "cadastro", tipo: "PF", nome: "Maria Fernanda Costa", documento: "123.456.789-00", email: "mfernanda@gmail.com", telefone: "(11) 91234-5678", endereco: "Rua das Flores, 42 - Jardim Bela Vista, Suzano (CEP: 08000-000)", interesse: "Piso Laminado/Vinílico", status: "novo", data: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString() },
+                { id: Date.now() + 3, origem: "contato", tipo: "Contato", nome: "Roberto Almeida", telefone: "(11) 94567-8901", email: "roberto.almeida@hotmail.com", mensagem: "Gostaria de saber sobre instalação de drywall para um escritório de 80m². Qual o prazo e o orçamento aproximado?", status: "visualizado", data: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString() },
+                { id: Date.now() + 4, origem: "cadastro", tipo: "PJ", nome: "Arq. Juliana Moreira", documento: "98.765.432/0001-11", email: "juliana@jmarquitetura.com.br", telefone: "(11) 99988-7766", endereco: "Av. Anchieta, 1200 - Vila Industrial, Mogi das Cruzes (CEP: 08710-000)", interesse: "Tabela B2B / Parceria Corporativa", status: "contatado", data: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString() },
+                { id: Date.now() + 5, origem: "cadastro", tipo: "PF", nome: "Carlos Eduardo Souza", documento: "987.654.321-00", email: "carlos.souza@gmail.com", telefone: "(11) 95432-1098", endereco: "Rua Sete de Setembro, 88 - Centro, Poá (CEP: 08555-000)", interesse: "Drywall e Forros", status: "novo", data: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString() },
+            ];
+
+            const existing = JSON.parse(localStorage.getItem("artesdec_leads") || "[]");
+            const combined = [...demos, ...existing];
+            localStorage.setItem("artesdec_leads", JSON.stringify(combined));
+            allLeads = combined;
+            renderStats();
+            renderTable();
+        }
+
+        // ==============================
+        // INIT
+        // ==============================
+        renderStats();
+        renderTable();
+    </script>
+
+    <script src="/dashboard-financeiro/app.js"></script>
+</body>
+
+</html>

@@ -6,14 +6,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const b2bNotice = document.getElementById("b2b-notice");
     const cadastroForm = document.getElementById("cadastro-form");
 
-    // Mask for Phone
+    // ---- Máscara de Telefone ----
     const phoneInput = document.getElementById("input-telefone");
     phoneInput.addEventListener("input", function (e) {
         let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
         e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
     });
 
-    // CEP API call (ViaCEP)
+    // ---- CEP Autocompletar (ViaCEP) ----
     const cepInput = document.getElementById("input-cep");
     cepInput.addEventListener("blur", function (e) {
         let cep = e.target.value.replace(/\D/g, '');
@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Toggle PF / PJ
+    // ---- Toggle PF / PJ ----
     typeBtns.forEach(btn => {
         btn.addEventListener("click", () => {
             typeBtns.forEach(t => t.classList.remove("active"));
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Submission via WhatsApp
+    // ---- Envio do Formulário (WhatsApp + localStorage) ----
     cadastroForm.addEventListener("submit", function (e) {
         e.preventDefault();
 
@@ -67,31 +67,45 @@ document.addEventListener("DOMContentLoaded", function () {
         const cidade = document.getElementById("input-cidade").value;
         const interesse = document.getElementById("input-interesse").value;
 
-        let message = "";
+        // ===== SALVAR NO LOCALSTORAGE =====
+        const lead = {
+            id: Date.now(),
+            origem: "cadastro",
+            tipo: tipo,
+            nome: nome,
+            documento: doc,
+            email: email,
+            telefone: tel,
+            endereco: `${rua}, ${num} - ${bairro}, ${cidade} (CEP: ${cep})`,
+            interesse: interesse,
+            status: "novo",
+            data: new Date().toISOString()
+        };
 
+        const leads = JSON.parse(localStorage.getItem("artesdec_leads") || "[]");
+        leads.unshift(lead);
+        localStorage.setItem("artesdec_leads", JSON.stringify(leads));
+        // ==================================
+
+        // ---- Mensagem WhatsApp ----
+        let message = "";
         if (tipo === "PJ") {
             message += `*🚨 NOVO CADASTRO PJ (B2B)*\n`;
             message += `_Este cadastro precisa ser analisado para liberação da tabela corporativa._\n\n`;
         } else {
             message += `*📝 NOVO CADASTRO PF*\n\n`;
         }
-
         message += `*Nome/Empresa:* ${nome}\n`;
         message += `*${tipo === "PJ" ? "CNPJ" : "CPF"}:* ${doc}\n`;
         message += `*E-mail:* ${email}\n`;
         message += `*Telefone:* ${tel}\n\n`;
-
         message += `*Endereço:* ${rua}, ${num} - ${bairro}, ${cidade} (CEP: ${cep})\n`;
         message += `*Principal Interesse:* ${interesse}\n`;
 
         const encodedMessage = encodeURIComponent(message);
         const waLink = `https://wa.me/5511999201062?text=${encodedMessage}`;
 
-        // Feedback
-        alert(`Cadastro preenchido! Você será redirecionado para enviar os dados no nosso WhatsApp.`);
+        alert(`Cadastro salvo! Você será redirecionado para enviar os dados no nosso WhatsApp.`);
         window.open(waLink, '_blank');
-
-        // Optionally reset form
-        // cadastroForm.reset();
     });
 });
