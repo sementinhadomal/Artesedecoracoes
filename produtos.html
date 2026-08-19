@@ -324,24 +324,61 @@
             margin-bottom: 14px;
         }
 
-        .product-card-btn {
-            display: block;
-            width: 100%;
-            background: var(--primary-blue);
+        .card-buttons-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .btn-card-view {
+            flex: 1;
+            background: #0E2954;
             color: white;
             border: none;
             border-radius: 8px;
-            padding: 11px;
-            font-size: 0.85rem;
+            padding: 10px 6px;
+            font-size: 0.76rem;
             font-weight: 700;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
             text-align: center;
             text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            white-space: nowrap;
+            font-family: 'Inter', sans-serif;
         }
 
-        .product-card-btn:hover {
-            background: #083580;
+        .btn-card-view:hover {
+            background: #1a4aa8;
+        }
+
+        .btn-card-price-wpp {
+            flex: 1;
+            background: #25D366;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 6px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            white-space: nowrap;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-card-price-wpp:hover {
+            background: #1da851;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
         }
 
         /* No Results */

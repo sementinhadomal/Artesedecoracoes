@@ -70,22 +70,29 @@ function renderProducts(products) {
         const nome = p.nome || 'Material';
         const catName = p.categoriaNome || getCategoryName(p.categoria);
         const desc = p.descricao
-            ? (p.descricao.length > 90 ? p.descricao.substring(0, 90) + "..." : p.descricao)
+            ? (p.descricao.length > 85 ? p.descricao.substring(0, 85) + "..." : p.descricao)
             : 'Material de alta qualidade para obra e acabamento.';
 
-        card.onclick = () => window.location.href = `produto.html?sku=${p.sku || p.id}`;
+        const waMsg = encodeURIComponent(`Olá! Quero saber o valor do produto *${nome}*.`);
+        const waUrl = `https://wa.me/5511999201062?text=${waMsg}`;
+        const prodUrl = `produto.html?sku=${p.sku || p.id}`;
 
         card.innerHTML = `
-            <div class="product-card-img">
+            <div class="product-card-img" onclick="window.location.href='${prodUrl}'">
                 <span class="card-cat-badge">${catName}</span>
                 <img src="${imagem}" alt="${nome}" loading="lazy">
             </div>
             <div class="product-card-body">
-                <h4>${nome}</h4>
-                <p class="product-card-desc">${desc}</p>
-                <button type="button" class="product-card-btn">
-                    <i class="fas fa-eye"></i> Ver Opções & Orçamento
-                </button>
+                <h4 onclick="window.location.href='${prodUrl}'" style="cursor:pointer;">${nome}</h4>
+                <p class="product-card-desc" onclick="window.location.href='${prodUrl}'" style="cursor:pointer;">${desc}</p>
+                <div class="card-buttons-row">
+                    <a href="${prodUrl}" class="btn-card-view">
+                        <i class="fas fa-eye"></i> Visualizar Produto
+                    </a>
+                    <a href="${waUrl}" target="_blank" onclick="event.stopPropagation();" class="btn-card-price-wpp">
+                        <i class="fab fa-whatsapp"></i> Solicitar Valor
+                    </a>
+                </div>
             </div>
         `;
 

@@ -86,12 +86,12 @@ function renderDetails(p) {
             </div>
 
             <div class="buy-box" style="margin-top: 30px;">
-                <h3 style="font-size: 1.1rem; color: #0E2954; margin-bottom: 15px;">Solicitar Orçamento Personalizado</h3>
+                <h3 style="font-size: 1.1rem; color: #0E2954; margin-bottom: 15px;">Consultar Valores e Informações</h3>
                 
                 ${optionsHtml}
 
                 <button id="btn-request-wpp" class="btn-buy" style="background: #25D366; border: none; cursor: pointer; width: 100%;">
-                    <i class="fab fa-whatsapp" style="font-size: 1.4rem;"></i> Solicitar Orçamento no WhatsApp
+                    <i class="fab fa-whatsapp" style="font-size: 1.4rem;"></i> Solicitar Valor no WhatsApp
                 </button>
                 <div style="margin-top: 14px; text-align: center; font-size: 0.82rem; color: #64748b;">
                     <i class="fas fa-truck"></i> Entregamos em Mogi das Cruzes e toda região
@@ -136,11 +136,11 @@ function renderDetails(p) {
 
     // WhatsApp Click Handler
     document.getElementById("btn-request-wpp").addEventListener("click", () => {
-        let msg = `Olá! Gostaria de solicitar um orçamento para o material *${p.nome}*.\n`;
+        let msg = `Olá! Quero saber o valor do produto *${p.nome}*.\n`;
         if (selectedOption) {
             msg += `*Opção/Cor Escolhida:* ${selectedOption.nome}\n`;
         }
-        msg += `\n_Vim pelo catálogo visual do site._`;
+        msg += `\n_Vim pelo catálogo do site._`;
 
         const encoded = encodeURIComponent(msg);
         window.open(`https://wa.me/5511999201062?text=${encoded}`, '_blank');
